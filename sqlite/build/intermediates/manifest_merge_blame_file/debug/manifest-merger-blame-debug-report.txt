@@ -1,0 +1,67 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:droid="http://schemas.android.com/apk/distribution"
+4    package="com.pisto.sqlite"
+5    android:versionCode="1"
+6    android:versionName="1.0" >
+7
+8    <uses-sdk
+9        android:minSdkVersion="21"
+9-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml
+10        android:targetSdkVersion="32" />
+10-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml
+11
+12    <application
+12-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:7:5-36:19
+13        android:name="com.pisto.sqlite.App"
+13-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:8:9-28
+14        android:allowBackup="true"
+14-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:9:9-35
+15        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+15-->[androidx.core:core:1.7.0] C:\Users\user\.gradle\caches\transforms-3\e6bed4c8af25c4658b72fc054e0a32c1\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+16        android:debuggable="true"
+17        android:icon="@mipmap/ic_launcher"
+17-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:10:9-43
+18        android:label="@string/app_name"
+18-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:11:9-41
+19        android:roundIcon="@mipmap/ic_launcher_round"
+19-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:12:9-54
+20        android:supportsRtl="true"
+20-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:13:9-35
+21        android:testOnly="true"
+22        android:theme="@style/Theme.Best_code" >
+22-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:14:9-47
+23        <activity
+23-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:15:9-25:20
+24            android:name="com.pisto.sqlite.ui.MainActivity"
+24-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:16:13-44
+25            android:exported="true"
+25-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:17:13-36
+26            android:screenOrientation="portrait" >
+26-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:18:13-49
+27            <intent-filter>
+27-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:20:13-24:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:21:17-69
+28-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:21:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:23:17-77
+30-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:23:27-74
+31            </intent-filter>
+32        </activity>
+33        <activity
+33-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:27:9-30:56
+34            android:name="com.pisto.sqlite.ui.StudentInfoOpActivity"
+34-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:28:13-53
+35            android:screenOrientation="portrait" />
+35-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:29:13-49
+36        <activity
+36-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:32:9-35:56
+37            android:name="com.pisto.sqlite.ui.StudentInfoEditActivity"
+37-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:33:13-55
+38            droid:screenOrientation="portrait" />
+38-->E:\Dev\codelab\sqlite\src\main\AndroidManifest.xml:34:13-47
+39    </application>
+40
+41</manifest>

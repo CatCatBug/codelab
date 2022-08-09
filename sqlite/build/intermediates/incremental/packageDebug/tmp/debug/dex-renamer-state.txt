@@ -1,0 +1,7 @@
+#Tue Aug 09 19:29:22 CST 2022
+base.1=E\:\\Dev\\codelab\\sqlite\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\classes.dex
+path.1=classes.dex
+base.0=E\:\\Dev\\codelab\\sqlite\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex
