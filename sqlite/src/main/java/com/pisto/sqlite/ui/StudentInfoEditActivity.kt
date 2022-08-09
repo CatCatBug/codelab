@@ -2,10 +2,10 @@ package com.pisto.sqlite.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pisto.sqlite.R
 import com.pisto.sqlite.db.Database
@@ -15,8 +15,6 @@ import com.pisto.sqlite.util.*
 class StudentInfoEditActivity : AppCompatActivity() {
 
     companion object {
-        private const val TAG = "StudentInfoEditActivity"
-
         fun intoActivity(activity: AppCompatActivity) {
             activity.startActivity(Intent(activity,StudentInfoEditActivity::class.java))
         }
@@ -48,6 +46,22 @@ class StudentInfoEditActivity : AppCompatActivity() {
         val address = getAddress()
         val studentInfo = StudentInfo(0, studentNumber, name, gender, phone, birthDay, address)
         Database.getStudentInfoDao().insert(studentInfo)
+        Toast.makeText(this,"添加学生信息成功",Toast.LENGTH_SHORT).show()
+        resetInfo()
+    }
+
+    private fun resetInfo() {
+        findViewById<EditText>(R.id.et_name).setText("")
+        findViewById<EditText>(R.id.et_phone).setText("")
+        findViewById<Spinner>(R.id.spinner_gender).setSelection(0)
+        findViewById<Spinner>(R.id.spinner_register_year).setSelection(0)
+        //出生年份
+        findViewById<Spinner>(R.id.spinner_year).setSelection(0)
+        //出生月份
+        findViewById<Spinner>(R.id.spinner_month).setSelection(0)
+        //出生日
+        findViewById<Spinner>(R.id.spinner_day).setSelection(0)
+        findViewById<EditText>(R.id.et_address).setText("")
     }
 
     private fun buildRandomStudentInfo() {
