@@ -2,14 +2,23 @@ package cc.fastcv.i18n
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.annotation.StyleRes
 import java.util.*
 
+/**
+ * /**
+  *
+  * @author xcl
+  * create at 2022/8/10 16:07
+  * 暂时发现 除了中文简体/繁体的操作复杂一些,其他较为简单
+  */
+
+ */
 object I18nManager {
 
     private lateinit var application: Application
@@ -66,7 +75,18 @@ object I18nManager {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun createConfiguration(context: Context, language: String): Context {
         val resources = context.resources
-        val locale = Locale(language)
+        val locale = when (language) {
+            "zh_CN" -> {
+                Locale.SIMPLIFIED_CHINESE
+            }
+            "zh_HK" -> {
+                Locale.TRADITIONAL_CHINESE
+            }
+            else -> {
+                Locale(language)
+            }
+        }
+
         val configuration = resources.configuration
         configuration.setLocale(locale)
         val localeList = LocaleList(locale)
@@ -78,7 +98,18 @@ object I18nManager {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun updateConfiguration(context: Context, language: String) {
         val resources = context.resources
-        val locale = Locale(language)
+        val locale = when (language) {
+            "zh_CN" -> {
+                Locale(language, Locale.CHINESE.country)
+            }
+            "zh_HK" -> {
+                Locale("TW", Locale.TRADITIONAL_CHINESE.country)
+            }
+            else -> {
+                Locale(language)
+            }
+        }
+
         Locale.setDefault(locale)
         val configuration = resources.configuration
         configuration.setLocale(locale)
