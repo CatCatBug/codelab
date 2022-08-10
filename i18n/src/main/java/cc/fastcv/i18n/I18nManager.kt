@@ -140,6 +140,11 @@ object I18nManager {
         currentLanguage = newLanguage
         SP_KEY_APP_LANGUAGE.saveSpStringValue(currentLanguage)
 
+        updateApplicationContext()
+        return true
+    }
+
+    private fun updateApplicationContext() {
         //更新ApplicationContext的语言设置
         val resources = application.resources
         val configuration = resources.configuration
@@ -162,7 +167,6 @@ object I18nManager {
         }
         val dm = resources.displayMetrics
         resources.updateConfiguration(configuration, dm)
-        return true
     }
 
     fun getSupportLanguageList() = appSupportLanguageArray.mapIndexed { index, language ->
