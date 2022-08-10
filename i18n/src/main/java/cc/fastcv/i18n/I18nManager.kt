@@ -100,10 +100,10 @@ object I18nManager {
         val resources = context.resources
         val locale = when (language) {
             "zh_CN" -> {
-                Locale(language, Locale.CHINESE.country)
+                Locale.SIMPLIFIED_CHINESE
             }
             "zh_HK" -> {
-                Locale("TW", Locale.TRADITIONAL_CHINESE.country)
+                Locale.TRADITIONAL_CHINESE
             }
             else -> {
                 Locale(language)
@@ -129,13 +129,11 @@ object I18nManager {
     }
 
     fun updateLanguage(index: Int): Boolean {
-        Log.d("xcl_debug", "updateLanguage: index = $index")
         if (index == -1) {
             return false
         }
 
         val newLanguage = appSupportLanguageArray[index]
-        Log.d("xcl_debug", "updateLanguage: newLanguage = $newLanguage  currentLanguage = $currentLanguage ")
         if (newLanguage == currentLanguage) {
             return false
         }
@@ -145,7 +143,18 @@ object I18nManager {
         //更新ApplicationContext的语言设置
         val resources = application.resources
         val configuration = resources.configuration
-        val locale = Locale(currentLanguage)
+        val locale = when (currentLanguage) {
+            "zh_CN" -> {
+                Locale.SIMPLIFIED_CHINESE
+            }
+            "zh_HK" -> {
+                Locale.TRADITIONAL_CHINESE
+            }
+            else -> {
+                Locale(currentLanguage)
+            }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             configuration.setLocales(LocaleList(locale))
         } else {
