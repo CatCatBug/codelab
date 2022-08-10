@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">i18n</string>
+    <string name="language_icon">language icon</string>
+    <string name="i_love_you">I love you</string>
+    <string name="i18n_setting">Multilingual settings</string>
+    <string name="is_checked">Is it selected</string>
+</resources>

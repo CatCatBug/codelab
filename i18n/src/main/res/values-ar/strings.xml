@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">i18n</string>
+    <string name="language_icon">رمز اللغة</string>
+    <string name="i_love_you">أحبك</string>
+    <string name="i18n_setting">إعدادات متعددة اللغات</string>
+    <string name="is_checked">هل تم اختياره</string>
+</resources>
