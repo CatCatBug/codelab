@@ -16,12 +16,61 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file("./keystore/release.jks")
+            storePassword "pisto."
+            keyAlias "root"
+            keyPassword "pisto."
+        }
+        debug {
+            storeFile file("./keystore/debug.jks")
+            storePassword "pisto."
+            keyAlias "root"
+            keyPassword "pisto."
         }
     }
+
+    buildTypes {
+        release {
+            zipAlignEnabled true
+            minifyEnabled false //启用混淆器
+            shrinkResources false //去掉无用资源
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            zipAlignEnabled true
+            debuggable true  //启用debug的buildType配置
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+    }
+
+    //如果使用不同的java文件，只需要在src目录下取渠道名称就行，然后新建java/com......就行，但是在main包下不要存在
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+        }
+        google {
+        }
+        huawei {
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            // 输出apk名称为zachary_v1.0_2018-08-13.apk
+            //${variant.name}-v${variant.versionName}
+            def fileName = "standard_v${defaultConfig.versionName}_${variant.name}_${releaseTime()}.apk"
+            outputFileName = fileName
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -29,6 +78,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+}
+
+//UTC:世界统一时间，不属于任意时区
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("UTC"))
 }
 
 dependencies {
