@@ -14,6 +14,39 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            ndkBuild {
+                // Passes an optional argument to ndk-build.
+                arguments "NDK_MODULE_PATH+=../../third_party/modules"
+            }
+            // For ndk-build, instead use the ndkBuild block.
+            cmake {
+                // Passes optional arguments to CMake.
+                arguments "-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang"
+
+                // Sets a flag to enable format macro constants for the C compiler.
+                cFlags "-D__STDC_FORMAT_MACROS"
+
+                // Sets optional flags for the C++ compiler.
+                cppFlags "-fexceptions", "-frtti"
+
+                // Specifies the library and executable targets from your CMake project
+                // that Gradle should build.
+                targets "libexample-one", "my-executible-demo"
+            }
+        }
+    }
+
+    sourceSets {
+        dev {}
+        google {}
+        huawei {}
+        other {
+            java.srcDirs += ['src/other/kotlin']
+            res.srcDirs += ['src/other/res1', 'src/other/res2']
+            manifest.srcFile 'src/other/AndroidManifest.xml'
+        }
     }
 
     signingConfigs {
@@ -48,25 +81,38 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
-
     }
 
     //如果使用不同的java文件，只需要在src目录下取渠道名称就行，然后新建java/com......就行，但是在main包下不要存在
     flavorDimensions "default"
     productFlavors {
         dev {
+            versionNameSuffix "-dev"
+            applicationIdSuffix '.dev'
+            manifestPlaceholders = [SD_CHANNEL_VALUE     : "dev"]
+            buildConfigField("int", "APP_PLATFORM", "1")
         }
         google {
+            manifestPlaceholders = [SD_CHANNEL_VALUE     : "google"]
+            buildConfigField("int", "APP_PLATFORM", "2")
         }
         huawei {
+            manifestPlaceholders = [SD_CHANNEL_VALUE     : "huawei"]
+            buildConfigField("int", "APP_PLATFORM", "3")
+        }
+        other {
+            applicationId "cc.fastcv.standard.other"
+            manifestPlaceholders = [SD_CHANNEL_VALUE     : "other"]
+            buildConfigField("int", "APP_PLATFORM", "4")
         }
     }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            // 输出apk名称为zachary_v1.0_2018-08-13.apk
-            //${variant.name}-v${variant.versionName}
-            def fileName = "standard_v${defaultConfig.versionName}_${variant.name}_${releaseTime()}.apk"
+            def value = getBuildConfigFieldValue(variant,"APP_PLATFORM")
+            def fileName = "standard_v${defaultConfig.versionName}_${variant.name}_${releaseTime()}_channel_${value}.apk"
+
+
             outputFileName = fileName
         }
     }
@@ -78,10 +124,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
+}
+
+static String getBuildConfigFieldValue(def variant, def fiedName) {
+    def properties = variant.productFlavors[0].properties
+    def name = properties.get("name")
+    if (name != variant.flavorName) {
+        return ""
+    }
+    def configs = properties.get("buildConfigFields")
+    def address = null
+    for (Map.Entry<String, Object> item : configs) {
+        def key = item.key
+        if (key == fiedName) {
+            address = item.value
+        }
+    }
+    if (address == null) return ""
+    def field = address.getClass().getDeclaredField("value")
+    field.setAccessible(true)
+    return field.get(address)
 }
 
 //UTC:世界统一时间，不属于任意时区
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("UTC"))
 }
 

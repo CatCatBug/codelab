@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Codelab">
 
-
+        <meta-data android:name="channel" android:value="${SD_CHANNEL_VALUE}" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import cc.fastcv.standard.R
+import cc.fastcv.standard.utils.getServer
 
 class MainFragment : Fragment() {
 
@@ -26,7 +29,14 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<TextView>(R.id.message).setOnClickListener {
+            context?.let {
+                Toast.makeText(it, getServer(), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
