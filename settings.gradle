@@ -2,3 +2,4 @@ rootProject.name = "codelab"
 include ':app'
 include ':i18n'
 include ':standard'
+include ':koin'
