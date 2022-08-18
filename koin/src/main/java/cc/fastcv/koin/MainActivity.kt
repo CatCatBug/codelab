@@ -10,12 +10,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cc.fastcv.koin.databinding.ActivityMainBinding
-import cc.fastcv.koin.model.AppData
-import cc.fastcv.koin.model.Person
-import cc.fastcv.koin.model.UserData
+import cc.fastcv.koin.model.*
 import cc.fastcv.koin.viewmodel.MyViewModel
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +41,24 @@ class MainActivity : AppCompatActivity() {
     //方式三  在ViewModel中不适用
     private val viewmodel2 = get<MyViewModel>()
 
+
+    //方式一
+    private val normalData:NormalData by inject(named("nameAnum"))
+    //方式二
+    private val normalData1 by inject<NormalData>(named("app"))
+    //方式三
+    private val normalData2 = get<NormalData>(named("appData"))
+
+    //方式一
+    private val weatherData:WeatherData by inject(named("wea_name"))
+    //方式二
+    private val weatherData1 by inject<WeatherData>(named("wea_app"))
+    //方式三
+    private val weatherData2 = get<WeatherData>(named("wea_appData"))
+
     val appData by inject<AppData>()
+
+    val viewData by inject<ViewData> { parametersOf(binding.navView) }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -65,7 +82,18 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 //        showInfo()
-        showInfo1()
+//        showInfo1()
+        showInfo2()
+    }
+
+    private fun showInfo2() {
+        weatherData.printData("weather1")
+        weatherData1.printData("weather2")
+        weatherData2.printData("weather3")
+
+        viewData.printId()
+
+        CompontData().printInfo()//这边直接new对象,看里面注入的对象信息
     }
 
     private fun showInfo1() {
@@ -74,6 +102,10 @@ class MainActivity : AppCompatActivity() {
         Log.d("xcl_debug", viewmodel2.hashCode().toString())
 
         Log.d("xcl_debug", "application是否为空:" + (appData.mApp == null))
+
+        normalData.printInfo("norData1")
+        normalData1.printInfo("norData2")
+        normalData2.printInfo("norData3")
     }
 
     private fun showInfo() {
