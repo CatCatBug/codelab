@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ui</string>
+    <string name="rolling_counter">滚动计数器</string>
+</resources>
