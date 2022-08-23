@@ -3,14 +3,14 @@ package cc.fastcv.ble.sdk.ring
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
+import cc.fastcv.ble.sdk.ConnectStateChangeCallback
 import cc.fastcv.ble.sdk.SDKManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 @SuppressLint("MissingPermission")
-class RingDeviceConnectedManager : BluetoothGattCallback() {
+class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateChangeCallback) :
+    BluetoothGattCallback() {
 
     companion object {
         //读及notify特征值
@@ -43,12 +43,11 @@ class RingDeviceConnectedManager : BluetoothGattCallback() {
     /**
      * 连接状态
      */
-    private var connectState : Boolean = false
+    private var connectState: Boolean = false
 
     /**
      * 连接到设备
      */
-    @RequiresApi(Build.VERSION_CODES.M)
     fun connect(address: String) {
         if (!connectState) return
 
@@ -91,29 +90,39 @@ class RingDeviceConnectedManager : BluetoothGattCallback() {
     /**
      * 操作目标
      */
-    private var target : Int = TARGET_INIT
+    private var target: Int = TARGET_INIT
+
+    fun getTargetDeviceMacAddress() = device?.address?:""
 
     /**
      * 连接状态改变
      */
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
         if (status != 133) {
             when (newState) {
+                BluetoothProfile.STATE_CONNECTING -> {
+                    stateChangeCallback.onConnecting(getTargetDeviceMacAddress())
+                }
                 BluetoothProfile.STATE_CONNECTED -> {
+                    connectState = true
                     //发现服务
                     target = TARGET_INIT
                     gatt?.discoverServices()
                 }
+                BluetoothProfile.STATE_DISCONNECTING -> {
+                    stateChangeCallback.onDisconnecting(getTargetDeviceMacAddress())
+                }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     connectState = false
                     target = TARGET_INIT
+                    stateChangeCallback.onDisconnected(getTargetDeviceMacAddress())
                     resetServer()
                     //断开连接之后 关闭服务
                     closeServer()
                 }
             }
         } else {
+            //133异常状态重试操作
             if (target == TARGET_DISCONNECTED) {
                 runBlocking {
                     delay(2000)
@@ -134,17 +143,33 @@ class RingDeviceConnectedManager : BluetoothGattCallback() {
         }
     }
 
+    /**
+     * 关闭服务
+     * 清除数据
+     */
     private fun closeServer() {
         mGatt?.close()
         mGatt = null
     }
 
+    /**
+     * 重置相关服务
+     */
     private fun resetServer() {
         ringNotifyDescriptor = null
         ringWriteCharacteristic = null
         otaUpgradeCharacteristic = null
         otaNotifyDescriptor = null
         otaNotifyCharacteristic = null
+    }
+
+    /**
+     * 取消连接
+     * 断开并清除服务
+     */
+    fun cancelConnect() {
+        mGatt?.disconnect()
+        mGatt?.close()
     }
 
 
