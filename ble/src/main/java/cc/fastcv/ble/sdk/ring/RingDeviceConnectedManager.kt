@@ -8,7 +8,7 @@ import cc.fastcv.ble.sdk.SDKManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission","NewApi")
 class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateChangeCallback) :
     BluetoothGattCallback() {
 
@@ -172,5 +172,67 @@ class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateCh
         mGatt?.close()
     }
 
+    /**
+     * 写入指令
+     */
+    fun writeCommand(cmd: String) : Boolean {
+        return if (mGatt != null && ringWriteCharacteristic != null) {
+            writerOperation.send_data(
+                OTA_CMD_NULL,
+                0,
+                cmd.toByteArray(),
+                cmd.toByteArray().size,
+                ringWriteCharacteristic!!,
+                mGatt
+            )
+        } else {
+            false
+        }
+    }
+
+    fun writeIntCommand(type: Int, address: Int, buffer: ByteArray?, length: Int): Boolean {
+        return if (mGatt != null && otaUpgradeCharacteristic != null) {
+            writerOperation.send_data(
+                type,
+                address,
+                buffer,
+                length,
+                otaUpgradeCharacteristic!!,
+                mGatt
+            )
+        } else {
+            false
+        }
+    }
+
+    fun writeLongCommand(type: Int, address: Int, buffer: ByteArray?, length: Long): Boolean {
+        return if (mGatt != null && otaUpgradeCharacteristic != null) {
+            writerOperation.send_data_long(
+                type,
+                address,
+                buffer,
+                length,
+                otaUpgradeCharacteristic!!,
+                mGatt
+            )
+        } else {
+            false
+        }
+    }
+
+    fun requestMtu(mtu: Int) {
+        if (mGatt != null) {
+            mGatt!!.requestMtu(mtu)
+        }
+    }
+
+    fun setBleOTANotify() {
+        if (mGatt != null && otaNotifyDescriptor != null) {
+            mGatt!!.setCharacteristicNotification(otaNotifyCharacteristic, true)
+            otaNotifyDescriptor!!.value =
+                BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+            mGatt!!.writeDescriptor(otaNotifyDescriptor)
+        }
+    }
 
 }

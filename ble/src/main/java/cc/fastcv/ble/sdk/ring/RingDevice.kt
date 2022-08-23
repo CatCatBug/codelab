@@ -4,13 +4,11 @@ import cc.fastcv.ble.sdk.AbsDeviceInteraction
 import cc.fastcv.ble.sdk.BaseDevice
 import cc.fastcv.ble.sdk.ConnectStateChangeCallback
 
-class RingDevice : BaseDevice(), ConnectStateChangeCallback {
+class RingDevice(defaultRingDeviceProtocolImpl:DefaultRingDeviceProtocolImpl) : BaseDevice(), ConnectStateChangeCallback,IRingDeviceProtocol by defaultRingDeviceProtocolImpl {
 
-    /**
-     * 指令生成器
-     */
-    private val commandBuilder = RingCommandBuilder()
+    init {
 
+    }
     /**
      * 指令解析器
      */
@@ -20,6 +18,8 @@ class RingDevice : BaseDevice(), ConnectStateChangeCallback {
      * 设备交互器
      */
     override var interaction : AbsDeviceInteraction = RingDeviceInteraction(this)
+
+    private val defaultRingDeviceProtocolImpl = DefaultRingDeviceProtocolImpl(interaction as RingDeviceInteraction)
 
 
     /*******    连接状态回调分发器   ********/
