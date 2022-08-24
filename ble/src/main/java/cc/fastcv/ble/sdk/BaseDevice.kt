@@ -26,7 +26,7 @@ abstract class BaseDevice {
     /**
      * 设备交互器
      */
-    protected open var interaction : AbsDeviceInteraction = EmptyDeviceInteraction()
+    abstract var interaction : AbsDeviceInteraction
 
     /***** 提供的设备通用基础接口 *****/
     fun connectDevice() {
@@ -50,13 +50,19 @@ abstract class BaseDevice {
         interaction.closeAndQuitSafely()
     }
 
-    fun callByCancelUsing() {
-        //切换设备时,如果取消使用后，则断开设备连接
+    /**
+     * 切换设备时
+     */
+    fun callByCancelUsing(supportMultiDevice: Boolean) {
+        //如果取消使用后，则断开设备连接
         interaction.disConnectDevice()
     }
 
-    fun callByStartUsing() {
-        //切换设备时,如果开始使用后，则开始连接设备
+    /**
+     * 切换设备时
+     */
+    fun callByStartUsing(supportMultiDevice: Boolean) {
+        //如果开始使用后，则开始连接设备
         interaction.connectDevice(deviceInfo.getEffectiveMacAddress())
     }
 }

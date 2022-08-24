@@ -22,13 +22,37 @@ object DeviceListManager {
         }
     }
 
-    //设备列表
+    /**
+     * 设备列表
+     */
     private var deviceList = mutableListOf<BaseDevice>()
 
-    //当前设备
+    /**
+     * 当前设备
+     */
     private var curDevice: BaseDevice?= null
 
-   /***** 提供的接口 *****/
+    /**
+     * 是否支持多设备
+     * 默认不支持
+     */
+    private var supportMultiDevice = false
+
+    /***** 提供的接口 *****/
+
+    /**
+     * 获取设备列表
+     */
+    fun getDeviceList() = deviceList
+
+    /**
+     * 获取当前设备
+     */
+    fun getCurDevice() = curDevice
+
+    fun setSupportMultiDevice(supportMultiDevice: Boolean) {
+        this.supportMultiDevice = supportMultiDevice
+    }
 
     /**
      * 新增一个设备
@@ -55,18 +79,8 @@ object DeviceListManager {
      */
     fun switchDevice(oldDevice: BaseDevice?,newDevice: BaseDevice?) {
         curDevice = newDevice
-        oldDevice?.callByCancelUsing()
-        newDevice?.callByStartUsing()
+        oldDevice?.callByCancelUsing(supportMultiDevice)
+        newDevice?.callByStartUsing(supportMultiDevice)
         notifyDeviceChange(oldDevice,newDevice)
     }
-
-    /**
-     * 获取设备列表
-     */
-    fun getDeviceList() = deviceList
-
-    /**
-     * 获取当前设备
-     */
-    fun getCurDevice() = curDevice
 }
