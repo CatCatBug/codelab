@@ -10,4 +10,8 @@ class EmptyDeviceInteraction : AbsDeviceInteraction("empty") {
 
     override fun cancelConnect() {
     }
+
+    override fun closeAndQuitSafely() {
+
+    }
 }

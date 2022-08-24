@@ -21,35 +21,33 @@ abstract class BaseDevice {
     /**
      * 设备信息
      */
-    private var deviceInfo : BaseDeviceInfo = BaseDeviceInfo()
+    abstract var deviceInfo : IDeviceInfo
 
     /**
      * 设备交互器
      */
     protected open var interaction : AbsDeviceInteraction = EmptyDeviceInteraction()
 
-    /***** 提供的接口 *****/
-
-    fun getInfo() : BaseDeviceInfo = deviceInfo
-
+    /***** 提供的设备通用基础接口 *****/
     fun connectDevice() {
-        if (deviceInfo.isEffectiveMacAddress()) {
-            interaction.connectDevice(deviceInfo.macAddress)
-        }
+        interaction.connectDevice(deviceInfo.getEffectiveMacAddress())
     }
 
     fun disConnectDevice() {
         interaction.disConnectDevice()
     }
 
-    fun callByAddToList() {
-        //设备被添加时,需要启动设备交互器
-        interaction.start()
-    }
+    /**
+     * 设备被添加时
+     */
+    fun callByAddToList() {}
 
+    /**
+     * 设备被移除时
+     */
     fun callByRemoveToList() {
-        //设备被移除时,需要停止设备交互器
-        interaction.quitSafely()
+        //默认操作是停止设备交互器
+        interaction.closeAndQuitSafely()
     }
 
     fun callByCancelUsing() {
@@ -59,6 +57,6 @@ abstract class BaseDevice {
 
     fun callByStartUsing() {
         //切换设备时,如果开始使用后，则开始连接设备
-        interaction.connectDevice(deviceInfo.macAddress)
+        interaction.connectDevice(deviceInfo.getEffectiveMacAddress())
     }
 }

@@ -3,13 +3,17 @@ package cc.fastcv.ble.sdk.ring
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
-import cc.fastcv.ble.sdk.ConnectStateChangeCallback
 import cc.fastcv.ble.sdk.SDKManager
+import cc.fastcv.ble.sdk.log.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
+/**
+ * 戒指设备最底层连接交互的类
+ */
 @SuppressLint("MissingPermission","NewApi")
-class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateChangeCallback) :
+class RingDeviceConnectedManager(private val ringDeviceInteractionProtocol: IRingDeviceInteractionProtocol) :
     BluetoothGattCallback() {
 
     companion object {
@@ -95,75 +99,6 @@ class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateCh
     fun getTargetDeviceMacAddress() = device?.address?:""
 
     /**
-     * 连接状态改变
-     */
-    override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-        if (status != 133) {
-            when (newState) {
-                BluetoothProfile.STATE_CONNECTING -> {
-                    stateChangeCallback.onConnecting(getTargetDeviceMacAddress())
-                }
-                BluetoothProfile.STATE_CONNECTED -> {
-                    connectState = true
-                    //发现服务
-                    target = TARGET_INIT
-                    gatt?.discoverServices()
-                }
-                BluetoothProfile.STATE_DISCONNECTING -> {
-                    stateChangeCallback.onDisconnecting(getTargetDeviceMacAddress())
-                }
-                BluetoothProfile.STATE_DISCONNECTED -> {
-                    connectState = false
-                    target = TARGET_INIT
-                    stateChangeCallback.onDisconnected(getTargetDeviceMacAddress())
-                    resetServer()
-                    //断开连接之后 关闭服务
-                    closeServer()
-                }
-            }
-        } else {
-            //133异常状态重试操作
-            if (target == TARGET_DISCONNECTED) {
-                runBlocking {
-                    delay(2000)
-                    disConnect()
-                }
-            } else if (target == TARGET_CONNECTED) {
-                runBlocking {
-                    mGatt?.disconnect()
-                    delay(2000)
-                    mGatt =
-                        device?.connectGatt(
-                            SDKManager.getApp(), false, this@RingDeviceConnectedManager,
-                            BluetoothDevice.TRANSPORT_LE
-                        )
-                }
-            }
-
-        }
-    }
-
-    /**
-     * 关闭服务
-     * 清除数据
-     */
-    private fun closeServer() {
-        mGatt?.close()
-        mGatt = null
-    }
-
-    /**
-     * 重置相关服务
-     */
-    private fun resetServer() {
-        ringNotifyDescriptor = null
-        ringWriteCharacteristic = null
-        otaUpgradeCharacteristic = null
-        otaNotifyDescriptor = null
-        otaNotifyCharacteristic = null
-    }
-
-    /**
      * 取消连接
      * 断开并清除服务
      */
@@ -233,6 +168,147 @@ class RingDeviceConnectedManager(private val stateChangeCallback: ConnectStateCh
                 BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
             mGatt!!.writeDescriptor(otaNotifyDescriptor)
         }
+    }
+
+    /**
+     * 连接状态改变
+     */
+    override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+        if (status != 133) {
+            when (newState) {
+                BluetoothProfile.STATE_CONNECTING -> {
+                    ringDeviceInteractionProtocol.onConnecting(getTargetDeviceMacAddress())
+                }
+                BluetoothProfile.STATE_CONNECTED -> {
+                    connectState = true
+                    //发现服务
+                    target = TARGET_INIT
+                    gatt?.discoverServices()
+                }
+                BluetoothProfile.STATE_DISCONNECTING -> {
+                    ringDeviceInteractionProtocol.onDisconnecting(getTargetDeviceMacAddress())
+                }
+                BluetoothProfile.STATE_DISCONNECTED -> {
+                    connectState = false
+                    target = TARGET_INIT
+                    ringDeviceInteractionProtocol.onDisconnected(getTargetDeviceMacAddress())
+                    resetServer()
+                    //断开连接之后 关闭服务
+                    closeServer()
+                }
+            }
+        } else {
+            //133异常状态重试操作
+            Logger.log("133异常状态,重试操作：$target ---")
+            if (target == TARGET_DISCONNECTED) {
+                runBlocking {
+                    delay(2000)
+                    disConnect()
+                }
+            } else if (target == TARGET_CONNECTED) {
+                runBlocking {
+                    mGatt?.disconnect()
+                    delay(2000)
+                    mGatt =
+                        device?.connectGatt(
+                            SDKManager.getApp(), false, this@RingDeviceConnectedManager,
+                            BluetoothDevice.TRANSPORT_LE
+                        )
+                }
+            }
+
+        }
+    }
+
+    /**
+     * 发现服务
+     */
+    override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+        super.onServicesDiscovered(gatt, status)
+        Logger.log("发现服务---")
+        if (gatt != null && status == BluetoothGatt.GATT_SUCCESS) { //BLE服务发现成功
+            // 遍历获取BLE服务Services/Characteristics/Descriptors的全部UUID
+            for (service in gatt.services) {
+                for (characteristic in service.characteristics) {
+                    if (UUID_NOTIFY_DATA == characteristic.uuid.toString()) {
+                        Logger.log("绑定常规消息服务---")
+                        //读及notify特征值
+                        ringNotifyDescriptor =
+                            characteristic.getDescriptor(UUID.fromString(UUID_DES))
+                        if (ringNotifyDescriptor != null) {
+                            gatt.setCharacteristicNotification(characteristic, true)
+                            ringNotifyDescriptor!!.value =
+                                BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                            gatt.writeDescriptor(ringNotifyDescriptor)
+                        }
+                    }
+
+                    if (UUID_RING_DATA == characteristic.uuid.toString()) {
+                        Logger.log("绑定常规指令写入服务---")
+                        //读及notify特征值
+                        ringWriteCharacteristic = characteristic
+                    }
+
+                    if ((characteristic.uuid.toString() == UUID_SEND_DATA) || (characteristic.uuid.toString() == UUID_SEND_DATA_H)) {
+                        Logger.log("绑定OTA指令写入服务---")
+                        otaUpgradeCharacteristic = characteristic
+                    }
+
+                    if ((characteristic.uuid.toString() == UUID_RECV_DATA) || (characteristic.uuid.toString() == UUID_RECV_DATA_H)) {
+                        Logger.log("绑定OTA消息服务---")
+                        otaNotifyCharacteristic = characteristic
+                        otaNotifyDescriptor =
+                            characteristic.getDescriptor(UUID.fromString(UUID_DES))
+                    }
+                }
+            }
+            mGatt = gatt
+            connectState = true
+            ringDeviceInteractionProtocol.onConnected(getTargetDeviceMacAddress())
+        } else {
+            Logger.log("发现服务异常,即将断开连接---")
+            disConnect()
+        }
+    }
+
+    override fun onCharacteristicChanged(
+        gatt: BluetoothGatt?,
+        characteristic: BluetoothGattCharacteristic?
+    ) {
+        ringDeviceInteractionProtocol.onCharacteristicChanged(characteristic?.value)
+    }
+
+
+    override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+        ringDeviceInteractionProtocol.onMtuChanged(status, mtu)
+    }
+
+    override fun onCharacteristicWrite(
+        gatt: BluetoothGatt?,
+        characteristic: BluetoothGattCharacteristic?,
+        status: Int
+    ) {
+        ringDeviceInteractionProtocol.onCharacteristicWrite(status)
+    }
+
+    /**
+     * 关闭服务
+     * 清除数据
+     */
+    private fun closeServer() {
+        mGatt?.close()
+        mGatt = null
+    }
+
+    /**
+     * 重置相关服务
+     */
+    private fun resetServer() {
+        ringNotifyDescriptor = null
+        ringWriteCharacteristic = null
+        otaUpgradeCharacteristic = null
+        otaNotifyDescriptor = null
+        otaNotifyCharacteristic = null
     }
 
 }

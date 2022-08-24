@@ -17,6 +17,8 @@ abstract class AbsDeviceInteraction(name: String) :
 
     abstract fun cancelConnect()
 
+    abstract fun closeAndQuitSafely()
+
     /**
      * 新增处理
      */

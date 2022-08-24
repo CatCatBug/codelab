@@ -2,68 +2,52 @@ package cc.fastcv.ble.sdk.ring
 
 import cc.fastcv.ble.sdk.AbsDeviceInteraction
 import cc.fastcv.ble.sdk.BaseDevice
-import cc.fastcv.ble.sdk.ConnectStateChangeCallback
+import cc.fastcv.ble.sdk.IDeviceInfo
 
-class RingDevice(defaultRingDeviceProtocolImpl:DefaultRingDeviceProtocolImpl) : BaseDevice(), ConnectStateChangeCallback,IRingDeviceProtocol by defaultRingDeviceProtocolImpl {
-
-    init {
-
-    }
+class RingDevice : BaseDevice() {
     /**
-     * 指令解析器
+     * 设备信息
      */
-    private val commandParser = RingCommandParser()
+    override var deviceInfo: IDeviceInfo = RingDeviceInfo()
+
+    /**
+     * 设备连接状态管理者及分发器
+     */
+    private val ringDeviceConnectStateManager = RingDeviceConnectStateManager()
 
     /**
      * 设备交互器
      */
-    override var interaction : AbsDeviceInteraction = RingDeviceInteraction(this)
+    override var interaction : AbsDeviceInteraction = RingDeviceInteraction(ringDeviceConnectStateManager)
 
+    /**
+     * 设备接口提供者
+     */
     private val defaultRingDeviceProtocolImpl = DefaultRingDeviceProtocolImpl(interaction as RingDeviceInteraction)
 
+    /**
+     * 设备回调处理分发器
+     */
+    private val defaultRingAppProtocolImpl = DefaultRingAppProtocolImpl(interaction as RingDeviceInteraction)
 
-    /*******    连接状态回调分发器   ********/
-    private val stateChangeCallbacks = mutableListOf<ConnectStateChangeCallback>()
+    /**
+     * 提供给外部调用接口的入口
+     */
+    fun getDeviceInterface() = defaultRingDeviceProtocolImpl
 
-    fun registerStateChangeCallback(callback: ConnectStateChangeCallback) {
-        if (!stateChangeCallbacks.contains(callback)) {
-            stateChangeCallbacks.add(callback)
-        }
-    }
+    /**
+     * 提供给外部监听回调的入口
+     */
+    fun getDeviceCallbackProvider() = defaultRingAppProtocolImpl
 
-    fun unRegisterStateChangeCallback(callback: ConnectStateChangeCallback) {
-        if (stateChangeCallbacks.contains(callback)) {
-            stateChangeCallbacks.remove(callback)
-        }
-    }
+    /**
+     * 提供给外部监听连接状态回调的入口
+     */
+    fun getConnectStateCallbackProvider() = ringDeviceConnectStateManager
 
-    override fun onConnecting(macAddress: String) {
-        stateChangeCallbacks.forEach {
-            it.onConnecting(macAddress)
-        }
-    }
+    /**
+     * 获取当前设备的连接状态
+     */
+    fun getConnectState() = (interaction as RingDeviceInteraction).getConnectedState()
 
-    override fun onConnected(macAddress: String) {
-        stateChangeCallbacks.forEach {
-            it.onConnected(macAddress)
-        }
-    }
-
-    override fun onDisconnecting(macAddress: String) {
-        stateChangeCallbacks.forEach {
-            it.onDisconnecting(macAddress)
-        }
-    }
-
-    override fun onDisconnected(macAddress: String) {
-        stateChangeCallbacks.forEach {
-            it.onDisconnected(macAddress)
-        }
-    }
-
-    override fun onConnectTimeout(macAddress: String) {
-        stateChangeCallbacks.forEach {
-            it.onConnectTimeout(macAddress)
-        }
-    }
 }
