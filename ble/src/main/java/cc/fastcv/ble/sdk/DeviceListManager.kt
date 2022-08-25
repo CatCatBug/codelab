@@ -79,8 +79,28 @@ object DeviceListManager {
      */
     fun switchDevice(oldDevice: BaseDevice?,newDevice: BaseDevice?) {
         curDevice = newDevice
+        notifyDeviceChange(oldDevice,newDevice)
         oldDevice?.callByCancelUsing(supportMultiDevice)
         newDevice?.callByStartUsing(supportMultiDevice)
-        notifyDeviceChange(oldDevice,newDevice)
+    }
+
+    /**
+     * 初始化设备列表
+     */
+    fun initDeviceList() {
+        //如果传入的列表数据为空,则访问本地数据（为了支持单机版可以正常使用）
+//        if () {
+//
+//        } else {
+//
+//        }
+
+        //拿到列表后,循环解析出对应的 Device对象
+
+        //将获取到的 Device对象存入 设备列表中
+
+        //获取上次连接的设备信息（如果没有则选中第一个）
+
+        //切换到选中的设备
     }
 }

@@ -50,4 +50,25 @@ class RingDevice : BaseDevice() {
      */
     fun getConnectState() = (interaction as RingDeviceInteraction).getConnectedState()
 
+    override fun callByAddToList() {
+
+    }
+
+    override fun callByRemoveToList() {
+        interaction.closeAndQuitSafely()
+    }
+
+    override fun callByCancelUsing(supportMultiDevice: Boolean) {
+        if (!supportMultiDevice) {
+            interaction.disConnectDevice()
+        }
+    }
+
+    override fun callByStartUsing(supportMultiDevice: Boolean) {
+        if (!supportMultiDevice) {
+            interaction.disConnectDevice()
+        }
+    }
+
+
 }

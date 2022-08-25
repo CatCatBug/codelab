@@ -40,29 +40,20 @@ abstract class BaseDevice {
     /**
      * 设备被添加时
      */
-    fun callByAddToList() {}
+    abstract fun callByAddToList()
 
     /**
      * 设备被移除时
      */
-    fun callByRemoveToList() {
-        //默认操作是停止设备交互器
-        interaction.closeAndQuitSafely()
-    }
+    abstract fun callByRemoveToList()
 
     /**
      * 切换设备时
      */
-    fun callByCancelUsing(supportMultiDevice: Boolean) {
-        //如果取消使用后，则断开设备连接
-        interaction.disConnectDevice()
-    }
+    abstract fun callByCancelUsing(supportMultiDevice: Boolean)
 
     /**
      * 切换设备时
      */
-    fun callByStartUsing(supportMultiDevice: Boolean) {
-        //如果开始使用后，则开始连接设备
-        interaction.connectDevice(deviceInfo.getEffectiveMacAddress())
-    }
+    abstract fun callByStartUsing(supportMultiDevice: Boolean)
 }

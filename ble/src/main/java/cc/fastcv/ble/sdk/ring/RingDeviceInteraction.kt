@@ -1,6 +1,5 @@
 package cc.fastcv.ble.sdk.ring
 
-import android.bluetooth.BluetoothGatt
 import cc.fastcv.ble.sdk.AbsDeviceInteraction
 import cc.fastcv.ble.sdk.ConnectStateChangeCallback
 import cc.fastcv.ble.sdk.OTAUpgradeListener
@@ -10,17 +9,12 @@ import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
-    AbsDeviceInteraction("ring"), IRingDeviceInteractionProtocol, IRingOTAProtocol {
+    AbsDeviceInteraction("ring"),ConnectStateChangeCallback {
 
     /**
-     * 设备连接器
+     * 戒指SDK支持
      */
-    private val connectedManager = RingDeviceConnectedManager(this)
-
-    /**
-     * 设备扫描器
-     */
-    private val scanner = RingScanner()
+    private val ringSdkSupport = RingSdkSupport(this)
 
     /**
      * 超时任务
@@ -28,14 +22,9 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
     private val timeoutTask = TimeoutTask()
 
     /**
-     * OTA升级的工具类
+     * 自动重连任务
      */
-    private val ringOTAUpgradeTool = RingOTAUpgradeTool()
-
-    /**
-     * 指令解析器
-     */
-    private val ringCommandParser = RingCommandParser()
+    private val autoTryConnectTask = AutoTryConnectTask()
 
     /**
      * 连接状态
@@ -52,12 +41,21 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
      */
     private var quit = false
 
+    /**
+     * 标记是否需要自动
+     */
+    private var allowAutoConnect = true
+
     override fun disConnectDevice() {
-        connectedManager.disConnect()
+        //主动断开设备,取消自动连接
+        allowAutoConnect = false
+        ringSdkSupport.disConnect()
     }
 
     override fun connectDevice(macAddress: String) {
-        connectedManager.connect(macAddress)
+        //主动连接设备,恢复自动连接
+        allowAutoConnect = true
+        ringSdkSupport.connect(macAddress)
         //启动连接超时任务 30秒
         sendMessageDelayed(timeoutTask, 30 * 1000L)
     }
@@ -66,18 +64,17 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
      * 取消连接操作
      */
     override fun cancelConnect() {
-        //取消连接操作
         //取消超时任务
         removeMessage(timeoutTask)
-        //停止扫描
-        scanner.stopScan()
-        //调用连接器取消连接
-        connectedManager.cancelConnect()
+        //主动断开设备,取消自动连接
+        allowAutoConnect = false
+        //取消连接
+        ringSdkSupport.cancelConnect()
     }
 
     override fun closeAndQuitSafely() {
         quit = true
-        connectedManager.disConnect()
+        ringSdkSupport.disConnect()
     }
 
     /**
@@ -85,18 +82,17 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
      */
     fun writeCommand(cmd: String) {
         sendMessage {
-            val result = connectedManager.writeCommand(cmd)
+            val result = ringSdkSupport.writeCommand(cmd)
             Logger.log("写入$cmd 指令：$result")
         }
     }
-
 
     /**
      * 设置消息接收值
      */
     fun setMsgReceiver(appProtocolImpl: IRingAppProtocol) {
         sendMessage {
-            ringCommandParser.setMsgReceiver(appProtocolImpl)
+            ringSdkSupport.setMsgReceiver(appProtocolImpl)
             Logger.log("设置消息接收者")
         }
     }
@@ -108,9 +104,9 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
         sendMessage {
             Logger.log("开始OTA升级")
             runBlocking {
-                ringOTAUpgradeTool.init(file, this@RingDeviceInteraction, listener)
+                ringSdkSupport.initOTATools(file, listener)
                 delay(5000)
-                ringOTAUpgradeTool.startUpgrade()
+                ringSdkSupport.startUpgrade()
             }
         }
     }
@@ -121,11 +117,23 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
     inner class TimeoutTask : Runnable {
         override fun run() {
             //停止扫描
-            scanner.stopScan()
+            ringSdkSupport.stopScan()
             //停止连接
             cancelConnect()
             //通知超时
-            onConnectTimeout(connectedManager.getTargetDeviceMacAddress())
+            onConnectTimeout(ringSdkSupport.getTargetDeviceMacAddress())
+        }
+    }
+
+    /**
+     * 自动重连任务
+     */
+    inner class AutoTryConnectTask : Runnable {
+        override fun run() {
+            //停止扫描
+            ringSdkSupport.stopScan()
+            //开始扫描
+            ringSdkSupport.startScan()
         }
     }
 
@@ -164,63 +172,16 @@ class RingDeviceInteraction(private val callback: ConnectStateChangeCallback) :
         callback.onDisconnected(macAddress)
         if (quit) {
             quitSafely()
+        } else if (allowAutoConnect) {
+            Logger.log("开始自动连接")
+            sendMessage(autoTryConnectTask)
         }
     }
 
     /**
      * 连接超时
      */
-    fun onConnectTimeout(macAddress: String) {
+    override fun onConnectTimeout(macAddress: String) {
         callback.onConnectTimeout(macAddress)
-    }
-
-    override fun onCharacteristicChanged(value: ByteArray?) {
-        Logger.log("特征值改变,返回结果不为空 ${value != null}")
-        value?.let {
-            ringOTAUpgradeTool.setReceiveValue(value)
-            ringCommandParser.handlerReceiveResult(String(it))
-        }
-    }
-
-    override fun onMtuChanged(status: Int, mtu: Int) {
-        Logger.log("收到mtu信息回调 status：$status  mtu：$mtu")
-        if (BluetoothGatt.GATT_SUCCESS == status) {
-            ringOTAUpgradeTool.setMtuChangeSateAndValue(true, mtu)
-        } else {
-            ringOTAUpgradeTool.setMtuChangeSateAndValue(true, 235)
-        }
-    }
-
-    override fun onCharacteristicWrite(status: Int) {
-        Logger.log("收到写入指令的状态回调:$status")
-        ringOTAUpgradeTool.setWriteStatus(status)
-    }
-
-    /*********  OTA升级需要提供的接口  *********/
-
-    override fun writeIntCommand(
-        type: Int,
-        address: Int,
-        buffer: ByteArray?,
-        length: Int
-    ): Boolean {
-        return connectedManager.writeIntCommand(type,address,buffer,length)
-    }
-
-    override fun writeLongCommand(
-        type: Int,
-        address: Int,
-        buffer: ByteArray?,
-        length: Long
-    ): Boolean {
-        return connectedManager.writeLongCommand(type,address,buffer,length)
-    }
-
-    override fun requestMtu(mtu: Int) {
-        connectedManager.requestMtu(mtu)
-    }
-
-    override fun setBleOTANotify() {
-        connectedManager.setBleOTANotify()
     }
 }

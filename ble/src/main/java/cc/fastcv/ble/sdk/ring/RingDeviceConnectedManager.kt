@@ -96,7 +96,7 @@ class RingDeviceConnectedManager(private val ringDeviceInteractionProtocol: IRin
      */
     private var target: Int = TARGET_INIT
 
-    fun getTargetDeviceMacAddress() = device?.address?:""
+    private fun getTargetDeviceMacAddress() = device?.address?:""
 
     /**
      * 取消连接
