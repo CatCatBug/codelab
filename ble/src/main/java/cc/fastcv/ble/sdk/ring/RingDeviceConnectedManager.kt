@@ -2,7 +2,10 @@ package cc.fastcv.ble.sdk.ring
 
 import android.annotation.SuppressLint
 import android.bluetooth.*
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import cc.fastcv.ble.sdk.SDKManager
 import cc.fastcv.ble.sdk.log.Logger
 import kotlinx.coroutines.delay
@@ -311,4 +314,35 @@ class RingDeviceConnectedManager(private val ringDeviceInteractionProtocol: IRin
         otaNotifyCharacteristic = null
     }
 
+    private fun initBroadcastReceiver() {
+        Logger.log("注册蓝牙开关状态的广播---")
+        val autoServiceBroad = BleBroadcastReceiver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        AppManager.getApplication().registerReceiver(autoServiceBroad, intentFilter)
+    }
+
+}
+
+class BleBroadcastReceiver(private val callback: BlueSwitchStateChangeCallback) : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        when (intent?.action) {
+            //监听系统蓝牙打开状态
+            BluetoothAdapter.ACTION_STATE_CHANGED -> {
+                val blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0)
+                if (blueState == BluetoothAdapter.STATE_ON) {
+                    Logger.log("蓝牙开启了---")
+                    callback.onBlueSwitchStateChange(true)
+                    //蓝牙重新打开后暂不做处理
+                } else if (blueState == BluetoothAdapter.STATE_OFF) {
+                    Logger.log("蓝牙关闭了---")
+                    callback.onBlueSwitchStateChange(false)
+                }
+            }
+        }
+    }
+}
+
+interface BlueSwitchStateChangeCallback {
+    fun onBlueSwitchStateChange(enable:Boolean)
 }

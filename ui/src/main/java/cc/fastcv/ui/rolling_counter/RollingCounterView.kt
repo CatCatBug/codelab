@@ -94,6 +94,11 @@ class RollingCounterView : View {
 
     private var targetValue = 0L
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Thread.dumpStack()
+    }
+
 
     fun plus(value: Int = 1) {
         targetValue += value
