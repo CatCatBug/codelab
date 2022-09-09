@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".ui.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_bg"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:onClick="intoStudentInfoOp"
+        android:text="@string/student_information_operation_portal"
+        tools:ignore="UsingOnClickInXml" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_bg"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:onClick="intoTeacherInfoOp"
+        android:text="@string/teacher_information_operation_portal"
+        tools:ignore="UsingOnClickInXml" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_bg"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:onClick="intoClassInfoOp"
+        android:text="@string/class_information_operation_portal"
+        tools:ignore="UsingOnClickInXml" />
+
+</LinearLayout>
