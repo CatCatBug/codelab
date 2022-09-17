@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Codelab">
         <activity
-            android:name=".MainActivity"
+            android:name=".livedata.LiveDataActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity android:name=".livedata.LiveDataActivity" />-->
     </application>
 
 </manifest>
