@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">codelab</string>
+    <string name="common_jan">一月</string>
+    <string name="common_feb">二月</string>
+    <string name="common_mar">三月</string>
+    <string name="common_apr">四月</string>
+    <string name="common_may">五月</string>
+    <string name="common_jun">六月</string>
+    <string name="common_jul">七月</string>
+    <string name="common_aug">八月</string>
+    <string name="common_sep">九月</string>
+    <string name="common_oct">十月</string>
+    <string name="common_nov">十一月</string>
+    <string name="common_dec">十二月</string>
 </resources>
