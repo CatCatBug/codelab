@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import cc.fastcv.jetpack.R
 import cc.fastcv.jetpack.databinding.ActivityLiveDataBinding
+import kotlin.system.exitProcess
 
 class LiveDataActivity : AppCompatActivity() {
 
@@ -42,6 +43,14 @@ class LiveDataActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 InfoListManager.setCurDeviceDes("我的值被修改了")
             }, 3000)
+        }
+
+        mBinding.tvExit.setOnClickListener {
+            //Android 完全退出app程序（不保留历史打开app记录）
+            finishAndRemoveTask();//该方法在API level 21之后添加。
+            android.os.Process.killProcess(android.os.Process.myPid())
+            exitProcess(0);
+
         }
 
 
