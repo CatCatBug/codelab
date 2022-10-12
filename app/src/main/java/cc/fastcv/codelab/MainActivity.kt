@@ -1,22 +1,23 @@
 package cc.fastcv.codelab
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import cc.fastcv.codelab.date_switch_view.DateSwitchView
-import cc.fastcv.codelab.date_switch_view.DayInfo
+import android.os.PersistableBundle
 
-class MainActivity : AppCompatActivity(), DateSwitchView.DateSelectCallback {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class MainActivity : AppCompatActivity() {
+
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
         setContentView(R.layout.activity_main)
 
-        val dataSwitch = findViewById<DateSwitchView>(R.id.data_switch)
-        dataSwitch.setDateSelectCallback(this)
-        dataSwitch.setDateRange("2021-10-03","2022-09-22")
     }
 
-    override fun onDateSelect(info: DayInfo) {
-        Log.d("xcl_debug", "onDateSelect: $info")
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        Thread.dumpStack()
     }
+
+
 }
