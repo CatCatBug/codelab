@@ -315,11 +315,11 @@ class RingDeviceConnectedManager(private val ringDeviceInteractionProtocol: IRin
     }
 
     private fun initBroadcastReceiver() {
-        Logger.log("注册蓝牙开关状态的广播---")
-        val autoServiceBroad = BleBroadcastReceiver(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
-        AppManager.getApplication().registerReceiver(autoServiceBroad, intentFilter)
+//        Logger.log("注册蓝牙开关状态的广播---")
+//        val autoServiceBroad = BleBroadcastReceiver(this)
+//        val intentFilter = IntentFilter()
+//        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+//        AppManager.getApplication().registerReceiver(autoServiceBroad, intentFilter)
     }
 
 }

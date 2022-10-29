@@ -1,23 +1,33 @@
 package cc.fastcv.codelab
 
-import android.content.Context
+import android.app.NotificationManager
+import android.content.ComponentName
+import android.content.Intent
+import android.os.*
+import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.PersistableBundle
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate: ")
+
+
+        findViewById<Button>(R.id.bt1).setOnClickListener {
+            startActivity(Intent(this,BActivity::class.java).apply {
+                component =
+                    ComponentName("cc.fastcv.codelab", "cc.fastcv.codelab.BActivity")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            })
+        }
+
 
     }
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(newBase)
-        Thread.dumpStack()
-    }
-
-
 }
