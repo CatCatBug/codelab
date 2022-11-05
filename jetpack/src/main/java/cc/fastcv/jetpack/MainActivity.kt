@@ -1,51 +1,106 @@
 package cc.fastcv.jetpack
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewTreeLifecycleOwner
 import cc.fastcv.jetpack.databinding.ActivityMainBinding
-import cc.fastcv.jetpack.lifecycle.MyObserver
+import cc.fastcv.jetpack.lifecycle.*
+import cc.fastcv.jetpack.lifecycle.component.LifecycleActivity
 
-class MainActivity : AppCompatActivity(), LifecycleEventObserver {
+class MainActivity : LifecycleActivity(), CvLifecycleEventObserver {
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        getLifecycle().addObserver(object : CvLifecycleObserver {
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
+            @CvOnLifecycleEvent(CvLifecycle.Event.ON_CREATE)
+            fun create() {
+                Log.d("xcl_debug1", "create: ")
+            }
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+
+//            @CvOnLifecycleEvent(CvLifecycle.Event.ON_ANY)
+//            fun testCall(owner: CvLifecycleOwner, event: CvLifecycle.Event) {
+//                Log.d("xcl_debug1", "testCall: ")
+//            }
+
+        })
+
+
+        binding.btBindLifecycle.setOnClickListener {
+            Log.d("xcl_debug", "onCreate: 绑定生命周期")
+            getLifecycle().addObserver(this)
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        lifecycle.addObserver(this)
+    override fun onStart() {
+        super.onStart()
+//        getLifecycle().addObserver(object : CvFullLifecycleObserver {
+//            override fun onCreate(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onCreate")
+//            }
+//
+//            override fun onStart(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onStart")
+//            }
+//
+//            override fun onResume(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onResume")
+//            }
+//
+//            override fun onPause(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onPause")
+//            }
+//
+//            override fun onStop(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onStop")
+//            }
+//
+//            override fun onDestroy(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onDestroy")
+//            }
+//
+//        })
     }
 
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+    override fun onPause() {
+        super.onPause()
+//        getLifecycle().addObserver(object : CvFullLifecycleObserver {
+//            override fun onCreate(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onCreate")
+//            }
+//
+//            override fun onStart(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onStart")
+//            }
+//
+//            override fun onResume(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onResume")
+//            }
+//
+//            override fun onPause(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onPause")
+//            }
+//
+//            override fun onStop(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onStop")
+//            }
+//
+//            override fun onDestroy(owner: CvLifecycleOwner) {
+//                Log.d("xcl_debug", "Observer2: onDestroy")
+//            }
+//
+//        })
+    }
+
+    override fun onStateChanged(source: CvLifecycleOwner, event: CvLifecycle.Event) {
         Log.d("xcl_debug", "onStateChanged: $event")
     }
 
