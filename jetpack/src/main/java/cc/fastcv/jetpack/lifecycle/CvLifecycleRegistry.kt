@@ -9,7 +9,7 @@ import kotlin.math.log
 
 class CvLifecycleRegistry : CvLifecycle {
     companion object {
-        private const val TAG = "xcl_debug"
+        private const val TAG = "CvLifecycleRegistry"
 
         fun min(state1: State, state2: State?): State {
             return if ((state2 != null && state2 < state1)) {
@@ -47,11 +47,13 @@ class CvLifecycleRegistry : CvLifecycle {
     }
 
     fun handleLifecycleEvent(@NonNull event: Event) {
+        Log.d(TAG, "handleLifecycleEvent: ")
         enforceMainThreadIfNeeded("handleLifecycleEvent")
         moveToState(event.targetState)
     }
 
     private fun moveToState(next: State) {
+        Log.d(TAG, "moveToState: $next")
         if (mState == next) {
             Log.d(TAG, "moveToState: mState == next")
             return
@@ -104,6 +106,7 @@ class CvLifecycleRegistry : CvLifecycle {
     }
 
     override fun addObserver(observer: CvLifecycleObserver) {
+        Log.d(TAG, "addObserver: ")
         enforceMainThreadIfNeeded("addObserver")
 
         val initialState = if (mState == State.DESTROYED) {
@@ -205,6 +208,7 @@ class CvLifecycleRegistry : CvLifecycle {
     }
 
     private fun sync() {
+        Log.d(TAG, "sync: ")
         //获取生命周期载体
         val lifecycleOwner = mLifecycleOwner.get()
             ?: throw IllegalStateException(

@@ -1,10 +1,10 @@
-package cc.fastcv.jetpack.lifecycle.component
+package cc.fastcv.jetpack.component
 
 import android.app.Activity
 import android.os.Bundle
 import cc.fastcv.jetpack.lifecycle.*
 
-open class LifecycleActivity : Activity(), CvLifecycleOwner {
+open class BaseActivity : Activity(), CvLifecycleOwner {
 
     private val mLifecycleRegistry = CvLifecycleRegistry(this)
 
