@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "384613749110",
+    "project_id": "cvfcm-a906c",
+    "storage_bucket": "cvfcm-a906c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384613749110:android:bbe690808645957d9d2a57",
+        "android_client_info": {
+          "package_name": "cc.fastcv.fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384613749110-g844udp8neh9k9imddgcbfnsv5e65sqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cc.fastcv.fcm",
+            "certificate_hash": "cdf1889de96e0fc69ee56d737f8ab9d08f60b60e"
+          }
+        },
+        {
+          "client_id": "384613749110-2ce491l1lopso2gib3f61hr1armq4s78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPg6sin8ewcdt7sqOIXdsf8MvnhTLOADs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384613749110-2ce491l1lopso2gib3f61hr1armq4s78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,15 +1,16 @@
 package cc.fastcv.jetpack.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import java.lang.reflect.InvocationTargetException
 
-class CvViewModelProvider(store: CvViewModelStore, factory: Factory) {
+class CvViewModelProvider(private var mViewModelStore: CvViewModelStore, private var mFactory: Factory) {
 
     companion object {
         private const val DEFAULT_KEY = "androidx.lifecycle.ViewModelProvider.DefaultKey"
     }
 
     interface Factory {
-        fun <T : ViewModel?> create(modelClass: Class<T>): T
+        fun <T : CvViewModel?> create(modelClass: Class<T>): T
     }
 
     open class OnRequeryFactory {
@@ -23,31 +24,28 @@ class CvViewModelProvider(store: CvViewModelStore, factory: Factory) {
             modelClass: Class<T>
         ): T
 
-        abstract fun <T : CvViewModel> create(modelClass: Class<T>): T
+        override fun <T : CvViewModel?> create(modelClass: Class<T>): T {
+            throw UnsupportedOperationException("create(String, Class<?>) must be called on implementaions of KeyedFactory")
+        }
     }
 
-    private var mFactory:Factory? = null
-    private var mViewModelStore:CvViewModelStore? = null
-
-
-    @JvmOverloads
     constructor(owner: CvViewModelStoreOwner) : this(
         owner.getViewModelStore(), if (owner is CvHasDefaultViewModelProviderFactory) {
             (owner as CvHasDefaultViewModelProviderFactory).getDefaultViewModelProviderFactory()
         } else {
-            CvViewModelProvider.CvNewInstanceFactory.getInstance()
+            CvNewInstanceFactory.getInstance()
         }
     )
 
-    fun <T : CvViewModel> get(modelClass: Class<T>) : T {
+    fun <T : CvViewModel> get(modelClass: Class<T>): T {
         val canonicalName = modelClass.canonicalName
             ?: throw IllegalArgumentException("Local and anonymous classes can not be ViewModels")
 
         return get("$DEFAULT_KEY:$canonicalName", modelClass)
     }
 
-    fun <T : CvViewModel> get(key:String, modelClass: Class<T>) : T {
-        var viewModel = mViewModelStore!!.get(key)
+    fun <T : CvViewModel> get(key: String, modelClass: Class<T>): T {
+        var viewModel = mViewModelStore.get(key)
 
         if (modelClass.isInstance(viewModel)) {
             if (mFactory is OnRequeryFactory) {
@@ -59,19 +57,17 @@ class CvViewModelProvider(store: CvViewModelStore, factory: Factory) {
 
             }
         }
-        if (mFactory is KeyedFactory) {
-            viewModel = (mFactory as KeyedFactory).create(key, modelClass)
+        viewModel = if (mFactory is KeyedFactory) {
+            (mFactory as KeyedFactory).create(key, modelClass)
         } else {
-//            viewModel = mFactory.create(modelClass)
+            mFactory.create(modelClass)
         }
 
-        return modelClass.newInstance()
-
-
+        mViewModelStore.put(key, viewModel)
+        return viewModel
     }
 
-
-    class CvNewInstanceFactory : Factory {
+    open class CvNewInstanceFactory : Factory {
 
         companion object {
             private var sInstance: CvNewInstanceFactory? = null
@@ -84,7 +80,7 @@ class CvViewModelProvider(store: CvViewModelStore, factory: Factory) {
             }
         }
 
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : CvViewModel?> create(modelClass: Class<T>): T {
             try {
                 return modelClass.newInstance()
             } catch (e: InstantiationException) {
@@ -95,4 +91,39 @@ class CvViewModelProvider(store: CvViewModelStore, factory: Factory) {
         }
     }
 
+    open class AndroidViewModelFactory(private val application: Application) :
+        CvViewModelProvider.CvNewInstanceFactory() {
+
+        companion object {
+            private var sInstance: AndroidViewModelFactory? = null
+
+
+            fun getInstance(application: Application): AndroidViewModelFactory {
+                if (sInstance == null) {
+                    sInstance = AndroidViewModelFactory(application)
+                }
+                return sInstance!!
+            }
+
+        }
+
+
+        override fun <T : CvViewModel?> create(modelClass: Class<T>): T {
+            if (CvAndroidViewModel::class.java.isAssignableFrom(modelClass)) {
+                try {
+                    return modelClass.getConstructor(Application::class.java)
+                        .newInstance(application)
+                } catch (e: NoSuchMethodException) {
+                    throw java.lang.RuntimeException("Cannot create an instance of $modelClass", e)
+                } catch (e: IllegalAccessException) {
+                    throw java.lang.RuntimeException("Cannot create an instance of $modelClass", e)
+                } catch (e: InstantiationException) {
+                    throw java.lang.RuntimeException("Cannot create an instance of $modelClass", e)
+                } catch (e: InvocationTargetException) {
+                    throw java.lang.RuntimeException("Cannot create an instance of $modelClass", e)
+                }
+            }
+            return super.create(modelClass)
+        }
+    }
 }

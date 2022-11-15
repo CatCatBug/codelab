@@ -87,9 +87,7 @@ class CvClassesInfoCache {
         val handlerToEvent = HashMap<MethodReference, CvLifecycle.Event>()
         if (superclass != null) {
             val superInfo = getInfo(superclass)
-            if (superInfo != null) {
-                handlerToEvent.putAll(superInfo.mHandlerToEvent)
-            }
+            handlerToEvent.putAll(superInfo.mHandlerToEvent)
         }
 
         //遍历实现的接口
