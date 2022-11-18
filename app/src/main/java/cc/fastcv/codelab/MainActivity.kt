@@ -1,13 +1,9 @@
 package cc.fastcv.codelab
 
-import android.app.NotificationManager
-import android.content.ComponentName
-import android.content.Intent
+import android.content.*
 import android.os.*
 import android.util.Log
-import android.view.View
 import android.widget.Button
-import android.widget.CalendarView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -23,14 +19,36 @@ class MainActivity : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.bt1).setOnClickListener {
-//            startActivity(Intent(this,BActivity::class.java).apply {
-//                component =
-//                    ComponentName("cc.fastcv.codelab", "cc.fastcv.codelab.BActivity")
-//                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//            })
-            findViewById<CalendarView>(R.id.cv).visibility = View.GONE
+
         }
 
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_TIME_TICK)
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        filter.addAction(Intent.ACTION_DATE_CHANGED)
+        filter.addAction(Intent.ACTION_TIME_CHANGED)
+        registerReceiver(DateTime(), filter)
+    }
 
+    class DateTime : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d(TAG, "收到广播")
+            if (intent == null) return
+            val action = intent.action
+            if (action == null || action.isEmpty()) return
+            if (action == Intent.ACTION_TIMEZONE_CHANGED) {
+                //系统每1分钟发送一次广播
+                Log.d(TAG, "设置了系统时区")
+            } else if (action == Intent.ACTION_DATE_CHANGED) {
+                //系统手动更改时间发送广播
+                Log.d(TAG, "设置了系统时间")
+            } else if (action == Intent.ACTION_TIME_TICK) {
+                //系统手动更改时间发送广播
+                Log.d(TAG, "每分钟变化")
+            } else if (action == Intent.ACTION_TIME_CHANGED) {
+                //系统手动更改时间发送广播
+                Log.d(TAG, "时间变化")
+            }
+        }
     }
 }
