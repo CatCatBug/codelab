@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "cc.fastcv.standard.dev",
+  "variantName": "processDevReleaseResources",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 2,
+      "versionName": "1.0-dev",
+      "outputFile": "standard_v1.0_devRelease_202211290849_channel_1.apk"
+    }
+  ]
+}

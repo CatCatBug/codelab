@@ -10,7 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Codelab">
 
-
+        <meta-data android:name="jpush_pkgname" android:value="${applicationId}" />
+        <meta-data android:name="jpush_appkey" android:value="${JPUSH_APPKEY}" />
+        <meta-data android:name="jpush_channel" android:value="${JPUSH_CHANNEL}" />
 
         <activity
             android:name=".MainActivity"

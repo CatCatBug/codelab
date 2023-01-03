@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import cc.fastcv.standard.BuildConfig
 import cc.fastcv.standard.R
 import cc.fastcv.standard.utils.getServer
 
@@ -33,6 +34,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        BuildConfig.UM_APPKEY
+
         view.findViewById<TextView>(R.id.message).setOnClickListener {
             context?.let {
                 Toast.makeText(it, getServer(), Toast.LENGTH_SHORT).show()

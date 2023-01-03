@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/main_tab_fl"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+    <RadioGroup
+        android:id="@android:id/tabs"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="#CFB4B4"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/home_rb"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_tab_home"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="首页" />
+
+        <RadioButton
+            android:id="@+id/find_rb"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_tab_discovery"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="发现" />
+
+        <RadioButton
+            android:id="@+id/new_rb"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_tab_fresh"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="新鲜" />
+
+        <RadioButton
+            android:id="@+id/message_rb"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_tab_msg"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="消息" />
+    </RadioGroup>
+</LinearLayout>
