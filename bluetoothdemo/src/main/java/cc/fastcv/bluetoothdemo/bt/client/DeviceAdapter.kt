@@ -1,14 +1,12 @@
-package cc.fastcv.bluetoothdemo.ble.client.adapter
+package cc.fastcv.bluetoothdemo.bt.client
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cc.fastcv.bluetoothdemo.R
-import cc.fastcv.bluetoothdemo.lib.BleDeviceProxy
+import cc.fastcv.bluetoothdemo.bt.BleDeviceProxy
 
 class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.VH>() {
 

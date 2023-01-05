@@ -47,8 +47,7 @@ class MainActivity : AppCompatActivity() {
         return "当前设备\n" +
                 "是否支持经典蓝牙：${BluetoothTools.isSupportBT(this)}\n" +
                 "是否支持低功耗蓝牙：${BluetoothTools.isSupportBLE(this)}\n" +
-                "本机蓝牙名称：${BluetoothTools.getDeviceName(this)}\n" +
-                "本机蓝牙地址：${BluetoothTools.getDeviceAddress(this)}\n"
+                "本机蓝牙名称：${BluetoothTools.getDeviceName(this)}\n"
     }
 
     override fun onRequestPermissionsResult(

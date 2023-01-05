@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import cc.fastcv.bluetoothdemo.bt.BleDeviceProxy
 
 class BtReceiver(context: Context, private val callback: BTCallback) : BroadcastReceiver() {
 

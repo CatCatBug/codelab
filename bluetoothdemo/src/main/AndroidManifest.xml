@@ -41,6 +41,7 @@
         <activity android:name=".bt.client.BTClientActivity" />
         <activity android:name=".bt.server.BTServerActivity" />
         <activity android:name=".bt.client.BTDeviceActivity" />
+        <activity android:name=".ble.client.BLEDeviceActivity" />
     </application>
 
 </manifest>

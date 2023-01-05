@@ -5,9 +5,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import cc.fastcv.bluetoothdemo.R
-import cc.fastcv.bluetoothdemo.ble.client.adapter.DeviceAdapter
 import cc.fastcv.bluetoothdemo.lib.BTScanner
-import cc.fastcv.bluetoothdemo.lib.BleDeviceProxy
+import cc.fastcv.bluetoothdemo.bt.BleDeviceProxy
 import cc.fastcv.bluetoothdemo.lib.BtReceiver
 
 class BTClientActivity : AppCompatActivity(), BtReceiver.BTCallback,
@@ -15,7 +14,7 @@ class BTClientActivity : AppCompatActivity(), BtReceiver.BTCallback,
 
     private val scanner = BTScanner(this)
 
-    private val adapter:DeviceAdapter = DeviceAdapter()
+    private val adapter: DeviceAdapter = DeviceAdapter()
 
     private val addressList = arrayListOf<String>()
     private val devices = arrayListOf<BleDeviceProxy>()
