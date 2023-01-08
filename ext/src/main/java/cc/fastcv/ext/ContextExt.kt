@@ -2,6 +2,7 @@ package cc.fastcv.ext
 
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 
 /**
  * Create by Eric
@@ -13,4 +14,8 @@ fun Context.startAct(action: () -> Unit = {}) {
             action()
         }
     )
+}
+
+fun Context.toast(msg: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, msg, duration).show()
 }
