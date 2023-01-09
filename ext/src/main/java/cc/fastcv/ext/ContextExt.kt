@@ -8,12 +8,26 @@ import android.widget.Toast
  * Create by Eric
  * on 2023/1/7
  */
-fun Context.startAct(action: () -> Unit = {}) {
+inline fun <reified T: Any> Context.start(
+    action: () -> Unit = {}
+) {
     startActivity(
-        Intent().apply {
+        Intent(this, T::class.java).apply {
             action()
         }
     )
+}
+
+fun Context.pickPhoto(
+    requestCode: Int,
+    title: String = "选择获取图片的方式",
+    action: (Intent, Int) -> Unit = {_,_->}
+) {
+    val intent = Intent()
+    intent.type = "image/*"
+    intent.action = Intent.ACTION_GET_CONTENT
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    action(Intent.createChooser(intent, title), requestCode)
 }
 
 fun Context.toast(msg: String, duration: Int = Toast.LENGTH_SHORT) {

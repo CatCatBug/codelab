@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
  * Create by Eric
  * on 2023/1/7
  */
-fun <T> LifecycleOwner.collect(
+inline fun <T> LifecycleOwner.collect(
     flow: Flow<T>,
-    block: (T?) -> Unit
+    crossinline block: suspend (T?) -> Unit
 ) {
     lifecycleScope.launch {
         flow.collect {
@@ -24,9 +24,9 @@ fun <T> LifecycleOwner.collect(
     }
 }
 
-fun <T> LifecycleOwner.collectWhenStart(
+inline fun <T> LifecycleOwner.collectWhenStart(
     flow: Flow<T>,
-    block: (T?) -> Unit
+    crossinline block: suspend (T?) -> Unit
 ) {
     flow
         .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
