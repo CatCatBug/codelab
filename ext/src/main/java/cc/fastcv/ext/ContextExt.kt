@@ -9,7 +9,7 @@ import android.widget.Toast
  * on 2023/1/7
  */
 inline fun <reified T: Any> Context.start(
-    action: () -> Unit = {}
+    action: Intent.() -> Unit = {}
 ) {
     startActivity(
         Intent(this, T::class.java).apply {

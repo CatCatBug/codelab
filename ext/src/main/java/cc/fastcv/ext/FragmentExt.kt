@@ -12,13 +12,9 @@ fun Fragment.toast(msg: String) {
 }
 
 inline fun <reified T: Any> Fragment.startAct(
-    action: () -> Unit = {}
+    action: Intent.() -> Unit = {}
 ) {
-    startActivity(
-        Intent(requireContext(), T::class.java).apply {
-            action()
-        }
-    )
+    requireContext().start<T>(action)
 }
 
 fun Fragment.pickPhoto(
