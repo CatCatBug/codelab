@@ -3,11 +3,14 @@ package cc.fastcv.bluetoothdemo.lib
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 
 
 object BluetoothTools {
@@ -67,5 +70,35 @@ object BluetoothTools {
 
         }
     }
+
+    /**
+     * 创建或者取消匹配
+     *
+     * @param type 处理类型 1 匹配  2  取消匹配
+     * @param device 设备
+     */
+    private fun createOrRemoveBond(type: Int, device: BluetoothDevice) {
+        var method: Method? = null
+        try {
+            when (type) {
+                1 -> {
+                    method = BluetoothDevice::class.java.getMethod("createBond")
+                    method.invoke(device)
+                }
+                2 -> {
+                    method = BluetoothDevice::class.java.getMethod("removeBond")
+                    method.invoke(device)
+//                    list.remove(device) //清除列表中已经取消了配对的设备
+                }
+            }
+        } catch (e: NoSuchMethodException) {
+            e.printStackTrace()
+        } catch (e: InvocationTargetException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        }
+    }
+
 
 }
