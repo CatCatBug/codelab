@@ -169,8 +169,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
-
 }
 
 static String getBuildConfigFieldValue(def variant, def fiedName) {

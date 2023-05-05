@@ -1,4 +1,4 @@
-package com.pisto.fuckcode.compass
+package cc.fastcv.compass
 
 import android.content.Context
 import android.hardware.Sensor
