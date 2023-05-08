@@ -11,6 +11,9 @@ include 'GoogleServer:fcm'
 //GradleLab
 include 'GradleLab:gradledemo'
 
+//Graphics
+include 'Graphics:layerlist'
+
 include ':i18n'
 include ':standard'
 include ':jetpack'
@@ -21,4 +24,3 @@ include ':contentprovider'
 include ':bluetoothdemo'
 include ':traceapp'
 //include ':xposed'
-include ':layerlist'
