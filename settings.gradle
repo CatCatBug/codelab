@@ -4,6 +4,7 @@ rootProject.name = "codelab"
 include 'SystemServer:filemanager'
 include 'SystemServer:sqlite'
 include 'SystemServer:notification'
+include 'SystemServer:i18n'
 
 //GoogleServer
 include 'GoogleServer:fcm'
@@ -14,7 +15,6 @@ include 'GradleLab:gradledemo'
 //Graphics
 include 'Graphics:layerlist'
 
-include ':i18n'
 include ':standard'
 include ':jetpack'
 include ':contact'
@@ -24,3 +24,4 @@ include ':contentprovider'
 include ':bluetoothdemo'
 include ':traceapp'
 //include ':xposed'
+include ':Graphics:bitmap'
