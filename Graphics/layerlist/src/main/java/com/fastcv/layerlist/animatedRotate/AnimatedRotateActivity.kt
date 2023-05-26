@@ -13,8 +13,12 @@ class AnimatedRotateActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_animated_rotate)
 
-        val icAnim = findViewById<ImageView>(R.id.ic_anim)
+        val icAnim = findViewById<ImageView>(R.id.iv)
         Log.d("xcl_debug", "onCreate: ${icAnim.drawable}")
+
+
+        icAnim.startAnimation()
+
 
 
 

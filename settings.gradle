@@ -15,8 +15,14 @@ include 'GradleLab:gradledemo'
 //Graphics
 include 'Graphics:layerlist'
 
+
+//Jetpack
+include 'Jetpack:navigation'
+
+//Kotlin
+include 'Kotlin:kotlindemo'
+
 include ':standard'
-include ':jetpack'
 include ':contact'
 include ':compass'
 include ':bitmap_test'
@@ -24,4 +30,9 @@ include ':contentprovider'
 include ':bluetoothdemo'
 include ':traceapp'
 //include ':xposed'
-include ':Graphics:bitmap'
+//include ':Graphics:bitmap'
+//include ':Graphics:lottie'
+
+
+//include ':Kotlin:flow_event_bus'
+include ':Jetpack:livedata'

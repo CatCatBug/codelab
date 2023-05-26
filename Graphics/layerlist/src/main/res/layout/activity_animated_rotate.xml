@@ -26,4 +26,12 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_anim_loading_2" />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/iv"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_anim_loading_3" />
+
 </LinearLayout>

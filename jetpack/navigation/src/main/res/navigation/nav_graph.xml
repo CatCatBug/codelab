@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_login"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.umeox.navigation.ui.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@+id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" >
+        </action>
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@+id/Settings"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.umeox.navigation.ui.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@+id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="type"
+            app:argType="integer"
+            android:defaultValue="0"
+            app:nullable="false"/>
+        <argument
+            android:name="uname"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true"/>
+
+        <deepLink
+            android:id="@+id/settingsDeepLink"
+            app:uri="test://www.umeox.com/?type={type}&amp;uname={uname}"
+            android:autoVerify="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.umeox.navigation.ui.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register">
+    </fragment>
+
+
+    <!-- 注意：引入导航图资源使用@navigation -->
+<!--    <include app:graph="@navigation/nav_graph_settings" />-->
+
+    <navigation android:id="@+id/Settings"
+        android:label="Settings"
+        app:startDestination="@id/settingsFragment">
+
+        <!-- 全局操作，在navigation标签下声明，目的地必须是当前导航图下的目的或者子导航图入口 -->
+        <action
+            android:id="@+id/action_to_settings_more"
+            app:destination="@+id/commonFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.umeox.navigation.ui.SettingsFragment"
+            android:label="HomeFragment"
+            tools:layout="@layout/fragment_settings" >
+            <argument
+                android:name="type"
+                app:argType="integer"
+                android:defaultValue="0"
+                app:nullable="false"/>
+            <argument
+                android:name="uname"
+                app:argType="string"
+                android:defaultValue="@null"
+                app:nullable="false"/>
+            <action
+                android:id="@+id/action_settingsFragment_to_accountSettingsFragment"
+                app:destination="@+id/accountSettingFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+            <action
+                android:id="@+id/action_settingsFragment_to_safeSettingsFragment"
+                app:destination="@+id/safeSettingFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+            <action
+                android:id="@+id/action_settingsFragment_to_normalSettingsFragment"
+                app:destination="@+id/normalSettingFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/accountSettingFragment"
+            android:label="accountSettingFragment"
+            android:name="com.umeox.navigation.ui.AccountSettingsFragment"
+            tools:layout="@layout/fragment_settings_account">
+            <action
+                android:id="@+id/action_acountSetting_to_uploadAvatar"
+                app:destination="@+id/uploadAvatar"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        </fragment>
+        <fragment
+            android:id="@+id/safeSettingFragment"
+            android:label="safeSettingFragment"
+            android:name="com.umeox.navigation.ui.SafeSettingsFragment"
+            tools:layout="@layout/fragment_settings_safe" />
+        <fragment
+            android:id="@+id/normalSettingFragment"
+            android:label="normalSettingFragment"
+            android:name="com.umeox.navigation.ui.NormalSettingsFragment"
+            tools:layout="@layout/fragment_settings_normal" />
+        <fragment
+            android:id="@+id/commonFragment"
+            android:label="CommonFragment"
+            android:name="com.umeox.navigation.ui.CommonFragment"
+            tools:layout="@layout/fragment_common" />
+
+        <activity
+            android:id="@+id/uploadAvatar"
+            android:label="UploadAvatar"
+            android:name="com.umeox.navigation.ui.UploadAvatarActivity"
+            tools:layout="@layout/activity_upload_avatar" />
+    </navigation>
+
+</navigation>

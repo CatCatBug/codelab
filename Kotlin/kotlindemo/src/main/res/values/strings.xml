@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">kotlinDemo</string>
+    <!--    双引号处理-->
+    <string name="t">\"Hello World!\"</string>
+    <!--   ' 符号处理-->
+    <string name="t1">Hello W\'orld!</string>
+    <!--    & 的转义-->
+    <string name="t2">Hello &amp; World!</string>
+    <!--   \ 处理 -->
+    <string name="t3">Hello &#064; \\World!</string>
+</resources>
