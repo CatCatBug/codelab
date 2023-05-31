@@ -1,0 +1,29 @@
+import com.hi.dhl.plugin.*
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../../common.gradle'
+
+android {
+    defaultConfig {
+        applicationId "com.umeox.logger"
+        versionCode BuildConfig.versionCode
+        versionName BuildConfig.versionName
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    for (dp in DependArray.dps) {
+        if (dp.type == DependType.IMPLEMENTATION) {
+            implementation dp.schemePath
+        } else if (dp.type == DependType.TEST_IMPLEMENTATION) {
+            testImplementation dp.schemePath
+        } else if (dp.type == DependType.ANDROID_TEST_IMPLEMENTATION) {
+            androidTestImplementation dp.schemePath
+        }
+    }
+}
