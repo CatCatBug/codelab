@@ -18,6 +18,7 @@ class LoggerPrintInterceptor: AbsLogInterceptChain() {
                 Log.e(tag, logMsg,throwable)
             }
         }
+        super.intercept(priority, tag, logMsg, throwable)
     }
 
 }

@@ -53,5 +53,41 @@
 
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启主线程日志打印"
+        android:layout_marginTop="30dp"
+        android:id="@+id/bt_main_log"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启子线程1日志打印"
+        android:id="@+id/bt_t1_log"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启子线程2日志打印"
+        android:id="@+id/bt_t2_log"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启子线程3日志打印"
+        android:id="@+id/bt_t3_log"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启子线程4日志打印"
+        android:id="@+id/bt_t4_log"
+        tools:ignore="HardcodedText" />
+
 
 </LinearLayout>

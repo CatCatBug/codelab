@@ -51,11 +51,11 @@ object Logger {
     fun initLogger(context: Application) {
         //初始化操作
         if (initialized) {
-            LogFileManager.setContext(context)
-            initialized = true
             return
         }
 
+        initialized = true
+        LogFileManager.setContext(context)
         interceptFirst = LoggerDecorateInterceptor().apply {
             addIntercept(LoggerPrintInterceptor().apply {
                 addIntercept(Logger2FileInterceptor())

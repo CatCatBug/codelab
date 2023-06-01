@@ -3,8 +3,7 @@ package com.umeox.logger
 import android.app.Application
 import android.os.Handler
 import android.util.Log
-import java.io.File
-import java.io.PrintWriter
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,15 +14,17 @@ internal object LogFileManager {
 
     //一天对应的毫秒数
     private const val DAY_MILLIS = 1000 * 60 * 60 * 24
+
     //日志保留的天数
-    private const val SAVE_DAY_LIMIT = 3
+    private const val SAVE_DAY_LIMIT = 1
 
     //指代日志文件
     private var file: File? = null
 
     //保存日志的线程
-    private val fileSaveHandlerThread = LogSaveHandlerThread()
-    private val handler = Handler(fileSaveHandlerThread.looper)
+    private var fileSaveHandlerThread: LogSaveHandlerThread? = null
+
+    private val stream = ByteArrayOutputStream()
 
     //是否记录日志到文件中 默认是关闭的
     private var logSaveAble = false
@@ -40,9 +41,13 @@ internal object LogFileManager {
     fun logSaveAble(enable: Boolean) {
         if (logSaveAble != enable) {
             if (enable) {
-                fileSaveHandlerThread.start()
+                if (fileSaveHandlerThread == null) {
+                    fileSaveHandlerThread = LogSaveHandlerThread()
+                }
+                fileSaveHandlerThread?.start()
             } else {
-                fileSaveHandlerThread.quitSafely()
+                fileSaveHandlerThread?.quitSafely()
+                fileSaveHandlerThread = null
             }
             logSaveAble = enable
         }
@@ -52,27 +57,34 @@ internal object LogFileManager {
      * 保存日志
      */
     fun saveIfNeed(priority: Int, tag: String, logMsg: String, throwable: Throwable?) {
+        Log.d("LogFileManager", "saveIfNeed: 准备写入日志到文件 $logSaveAble")
         if (logSaveAble) {
-            handler.post {
+            Handler(fileSaveHandlerThread!!.looper).post {
+                Log.d("LogFileManager", "saveIfNeed: 准备写入日志到文件 file = $file")
                 if (file == null) {
                     createFile()
                     delFileIfNeed()
                 }
 
                 if (file != null) {
+                    Log.d("LogFileManager", "saveIfNeed: 写入日志到文件")
                     val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(Date())
                         .toString()
                     val needWriteMessage = "$date ${getPriority(priority)}/$tag:$logMsg\n"
                     try {
                         file!!.appendText(needWriteMessage)
-                        throwable?.printStackTrace(PrintWriter(file!!))
+
+                        throwable?.let {
+                            it.printStackTrace(PrintStream(stream))
+                            file!!.appendText(stream.toString())
+                            stream.reset()
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Log.d("LogFileManager", "saveIfNeed: ${e.message}")
                     }
                 }
             }
-
         }
     }
 
@@ -122,6 +134,7 @@ internal object LogFileManager {
     private fun createFile() {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(Date())
         val cacheDir = context?.externalCacheDir
+        Log.d("LogFileManager", "createFile: 准备创建日志文件 cacheDir = $cacheDir")
         cacheDir?.let {
             //Log.i("创建文件","创建文件");
             file = File(it, "$format.txt")
@@ -129,8 +142,9 @@ internal object LogFileManager {
                 try {
                     //在指定的文件夹中创建文件
                     file!!.createNewFile()
+                    Log.d("LogFileManager", "日志文件创建成功 ${file!!.name}")
                 } catch (e: Exception) {
-                    Log.d("Log", "init: ${e.message}")
+                    Log.d("LogFileManager", "init: ${e.message}")
                     return
                 }
             }
