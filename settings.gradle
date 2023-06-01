@@ -19,9 +19,6 @@ include 'Graphics:layerlist'
 //Jetpack
 include 'Jetpack:navigation'
 
-//Kotlin
-include 'Kotlin:kotlindemo'
-
 include ':standard'
 include ':contact'
 include ':compass'
