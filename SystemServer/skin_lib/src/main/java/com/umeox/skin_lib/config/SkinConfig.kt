@@ -10,6 +10,14 @@ object SkinConfig {
     const val PREF_CUSTOM_SKIN_PATH = "cn_feng_skin_custom_path"
     const val DEFALT_SKIN = "cn_feng_skin_default"
 
+
+    const val SKIN_SUFFIX = "skin_suffix"
+
+    /**
+     * 配置是否使用皮肤包
+     */
+    var useSkinPackage = false
+
     /**
      * get path of last skin package path
      * @param context
@@ -21,10 +29,20 @@ object SkinConfig {
 
     fun saveSkinPath(path: String) {
         PREF_CUSTOM_SKIN_PATH.saveSpStringValue(path)
+        SKIN_SUFFIX.saveSpStringValue("")
     }
 
     fun isDefaultSkin(): Boolean {
         return DEFALT_SKIN == getCustomSkinPath()
+    }
+
+    fun getSkinSuffix(): String {
+        return SKIN_SUFFIX.getSpStringValue("")
+    }
+
+
+    fun saveSkinSuffix(suffix: String) {
+        SKIN_SUFFIX.saveSpStringValue(suffix)
     }
 
 }

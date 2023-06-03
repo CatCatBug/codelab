@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_app_bg"
+        android:id="@+id/ll"
         android:orientation="vertical"
         skin:skinAble="true">
 
@@ -24,8 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="切换主题"
-                skin:skinAble="true"
                 android:textColor="@color/color_text_1"
+                skin:skinAble="true"
                 tools:ignore="HardcodedText" />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -37,6 +38,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -45,41 +47,11 @@
             android:backgroundTint="@color/color_item_bg_1"
             android:gravity="center"
             android:paddingVertical="5dp"
-            android:id="@+id/tv_native"
-            android:text="原生控件适配"
+            android:text="点击添加文本"
             android:textColor="@color/color_text_1"
             skin:skinAble="true"
             tools:ignore="HardcodedText" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_bg"
-            android:backgroundTint="@color/color_item_bg_1"
-            android:gravity="center"
-            android:id="@+id/tv_mvvm"
-            android:paddingVertical="5dp"
-            android:text="Mvvm适配"
-            android:textColor="@color/color_text_1"
-            skin:skinAble="true"
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_bg"
-            android:backgroundTint="@color/color_item_bg_1"
-            android:gravity="center"
-            android:id="@+id/tv_fragment"
-            android:paddingVertical="5dp"
-            android:text="Fragment适配"
-            android:textColor="@color/color_text_1"
-            skin:skinAble="true"
-            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

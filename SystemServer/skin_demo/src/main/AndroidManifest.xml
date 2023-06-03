@@ -26,6 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MvvmActivity" />
+        <activity android:name=".FragmentActivity" />
+        <activity android:name=".NativeActivity" />
     </application>
 
 </manifest>

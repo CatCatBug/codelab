@@ -85,6 +85,15 @@ object SkinManager : ISkinLoader {
     }
 
     fun load(skinPackagePath: String, callback: ILoaderListener?) {
+        if (!SkinConfig.useSkinPackage) {
+            Log.d("xcl_debug", "添加前缀： _$skinPackagePath")
+            callback?.onStart()
+            SkinConfig.saveSkinSuffix("_$skinPackagePath")
+            callback?.onSuccess()
+            notifySkinUpdate()
+            return
+        }
+
         Log.d("xcl_debug", "开始加载资源： $skinPackagePath")
         val startTime = System.currentTimeMillis()
         skinScope.launch(Dispatchers.IO) {
@@ -164,42 +173,82 @@ object SkinManager : ISkinLoader {
 
     fun getColor(resId: Int): Int {
         val originColor: Int = context!!.resources.getColor(resId, null)
-        if (mResources == null || isDefaultSkin) {
-            return originColor
+
+        if (!SkinConfig.useSkinPackage) {
+            val resName: String =
+                context!!.resources.getResourceEntryName(resId) + SkinConfig.getSkinSuffix()
+
+            val trueResId: Int =
+                context!!.resources.getIdentifier(resName, "color", context!!.packageName)
+
+            val trueColor: Int = try {
+                context!!.resources.getColor(trueResId, null)
+            } catch (e: Resources.NotFoundException) {
+                e.printStackTrace()
+                originColor
+            }
+            return trueColor
+        } else {
+            if (mResources == null || isDefaultSkin) {
+                return originColor
+            }
+
+            val resName: String = context!!.resources.getResourceEntryName(resId)
+
+            val trueResId: Int = mResources!!.getIdentifier(resName, "color", skinPackageName)
+
+            val trueColor: Int = try {
+                mResources!!.getColor(trueResId, null)
+            } catch (e: Resources.NotFoundException) {
+                e.printStackTrace()
+                originColor
+            }
+
+            return trueColor
         }
-
-        val resName: String = context!!.resources.getResourceEntryName(resId)
-
-        val trueResId: Int = mResources!!.getIdentifier(resName, "color", skinPackageName)
-
-        val trueColor: Int = try {
-            mResources!!.getColor(trueResId, null)
-        } catch (e: Resources.NotFoundException) {
-            e.printStackTrace()
-            originColor
-        }
-
-        return trueColor
     }
 
     fun getDrawable(resId: Int): Drawable? {
         val originDrawable = ContextCompat.getDrawable(context!!, resId)
-        if (mResources == null || isDefaultSkin) {
-            return originDrawable
+        if (!SkinConfig.useSkinPackage) {
+            val resName =
+                context!!.resources.getResourceEntryName(resId) + SkinConfig.getSkinSuffix()
+
+            val trueResId = context!!.resources.getIdentifier(resName, "drawable", skinPackageName)
+
+            val trueDrawable: Drawable? = try {
+                ResourcesCompat.getDrawable(context!!.resources, trueResId, null)
+            } catch (e: Resources.NotFoundException) {
+                e.printStackTrace()
+                originDrawable
+            }
+
+            Log.d(
+                "xcl_debug",
+                "getDrawable: originDrawable = $originDrawable    trueDrawable = $trueDrawable"
+            )
+            return trueDrawable
+        } else {
+            if (mResources == null || isDefaultSkin) {
+                return originDrawable
+            }
+            val resName = context!!.resources.getResourceEntryName(resId)
+
+            val trueResId = mResources!!.getIdentifier(resName, "drawable", skinPackageName)
+
+            val trueDrawable: Drawable? = try {
+                ResourcesCompat.getDrawable(mResources!!, trueResId, null)
+            } catch (e: Resources.NotFoundException) {
+                e.printStackTrace()
+                originDrawable
+            }
+
+            Log.d(
+                "xcl_debug",
+                "getDrawable: originDrawable = $originDrawable    trueDrawable = $trueDrawable"
+            )
+            return trueDrawable
         }
-        val resName = context!!.resources.getResourceEntryName(resId)
-
-        val trueResId = mResources!!.getIdentifier(resName, "drawable", skinPackageName)
-
-        val trueDrawable: Drawable? = try {
-            ResourcesCompat.getDrawable(mResources!!, trueResId, null)
-        } catch (e: Resources.NotFoundException) {
-            e.printStackTrace()
-            originDrawable
-        }
-
-        Log.d("xcl_debug", "getDrawable: originDrawable = $originDrawable    trueDrawable = $trueDrawable")
-        return trueDrawable
     }
 
     fun convertToColorStateList(resId: Int): ColorStateList? {
@@ -209,38 +258,67 @@ object SkinManager : ISkinLoader {
             isExtendSkin = false
         }
 
-        val resName = context!!.resources.getResourceEntryName(resId)
-        if (isExtendSkin) {
-            val trueResId = mResources!!.getIdentifier(resName, "color", skinPackageName)
-            val trueColorList: ColorStateList?
-            // 如果皮肤包没有复写该资源，但是需要判断是否是ColorStateList
-            if (trueResId == 0) {
-                try {
-                    return ContextCompat.getColorStateList(context!!, resId)
-                } catch (e: Resources.NotFoundException) {
-                    e.printStackTrace()
-                }
-            } else {
-                try {
-                    trueColorList = ResourcesCompat.getColorStateList(mResources!!, trueResId, null)
-                    return trueColorList
-                } catch (e: Resources.NotFoundException) {
-                    e.printStackTrace()
-                }
+        if (!SkinConfig.useSkinPackage) {
+            val resName =
+                context!!.resources.getResourceEntryName(resId) + SkinConfig.getSkinSuffix()
+
+            val trueResId =
+                context!!.resources.getIdentifier(resName, "color", context!!.packageName)
+
+            try {
+                return ContextCompat.getColorStateList(context!!, trueResId)
+            } catch (e: Resources.NotFoundException) {
+                e.printStackTrace()
             }
-        } else {
+
             try {
                 return ContextCompat.getColorStateList(context!!, resId)
             } catch (e: Resources.NotFoundException) {
                 e.printStackTrace()
             }
-        }
 
-        val states = Array(1) {
-            IntArray(
-                1
-            )
+            val states = Array(1) {
+                IntArray(
+                    1
+                )
+            }
+            return ColorStateList(states, intArrayOf(ContextCompat.getColor(context!!, resId)))
+
+        } else {
+            val resName = context!!.resources.getResourceEntryName(resId)
+            if (isExtendSkin) {
+                val trueResId = mResources!!.getIdentifier(resName, "color", skinPackageName)
+                val trueColorList: ColorStateList?
+                // 如果皮肤包没有复写该资源，但是需要判断是否是ColorStateList
+                if (trueResId == 0) {
+                    try {
+                        return ContextCompat.getColorStateList(context!!, resId)
+                    } catch (e: Resources.NotFoundException) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    try {
+                        trueColorList =
+                            ResourcesCompat.getColorStateList(mResources!!, trueResId, null)
+                        return trueColorList
+                    } catch (e: Resources.NotFoundException) {
+                        e.printStackTrace()
+                    }
+                }
+            } else {
+                try {
+                    return ContextCompat.getColorStateList(context!!, resId)
+                } catch (e: Resources.NotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+
+            val states = Array(1) {
+                IntArray(
+                    1
+                )
+            }
+            return ColorStateList(states, intArrayOf(ContextCompat.getColor(context!!, resId)))
         }
-        return ColorStateList(states, intArrayOf(ContextCompat.getColor(context!!, resId)))
     }
 }

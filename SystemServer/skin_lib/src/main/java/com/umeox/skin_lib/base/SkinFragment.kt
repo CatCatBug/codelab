@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.umeox.skin_lib.entity.DynamicAttr
 import com.umeox.skin_lib.listener.IDynamicNewView
 
-class SkinFragment : Fragment() {
+open class SkinFragment : Fragment() {
 
     private var mIDynamicNewView: IDynamicNewView? = null
 
