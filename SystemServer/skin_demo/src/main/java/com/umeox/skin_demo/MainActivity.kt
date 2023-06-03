@@ -26,6 +26,18 @@ class MainActivity : SkinActivity() {
             }
         }
 
+        findViewById<SwitchCompat>(R.id.sc_font).setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                SkinManager.applyTextFont(mapOf(
+                    Pair("montserrat_italic","montserrat_black")
+                ))
+            } else {
+                SkinManager.applyTextFont(mapOf(
+                    Pair("montserrat_black","montserrat_italic")
+                ))
+            }
+        }
+
         findViewById<TextView>(R.id.tv_native).setOnClickListener {
             startActivity(Intent(this, NativeActivity::class.java))
         }

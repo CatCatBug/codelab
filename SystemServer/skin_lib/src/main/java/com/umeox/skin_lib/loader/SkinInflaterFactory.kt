@@ -90,7 +90,8 @@ class SkinInflaterFactory : LayoutInflater.Factory2 {
             if (!AttrFactory.isSupportedAttr(attrName)) {
                 continue
             }
-            if (attrValue.startsWith("@")) {
+            Log.d("xcl_debug", "parseSkinAttr: attrName = $attrName")
+            if (attrValue.startsWith("@") || attrName == "fontFamily") {
                 try {
                     val id = attrValue.substring(1).toInt()
                     val entryName = context.resources.getResourceEntryName(id)
@@ -125,6 +126,18 @@ class SkinInflaterFactory : LayoutInflater.Factory2 {
                     continue
                 }
                 si.apply()
+            }
+        }
+    }
+
+    fun applyTextFont(replaceTable:Map<String,String>) {
+        Log.d("xcl_debug", "applySkin: 应用字体")
+        if (mSkinItems.isNotEmpty()) {
+            for (si in mSkinItems) {
+                if (si.view == null) {
+                    continue
+                }
+                si.applyTextFont(replaceTable)
             }
         }
     }

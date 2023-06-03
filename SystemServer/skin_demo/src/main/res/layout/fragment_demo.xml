@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:fontFamily="@font/montserrat_italic"
         android:text="Fragment测试"
         android:textColor="@color/color_text_1"
         android:textSize="20sp"
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:text="切换主题"
             skin:skinAble="true"
+            android:fontFamily="@font/montserrat_italic"
             android:textColor="@color/color_text_1"
             tools:ignore="HardcodedText" />
 

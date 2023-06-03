@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="切换主题"
                 android:textColor="@color/color_text_1"
+                android:fontFamily="@font/montserrat_italic"
                 skin:skinAble="true"
                 tools:ignore="HardcodedText" />
 
@@ -47,6 +48,7 @@
             android:backgroundTint="@color/color_item_bg_1"
             android:gravity="center"
             android:paddingVertical="5dp"
+            android:fontFamily="@font/montserrat_italic"
             android:text="点击添加文本"
             android:textColor="@color/color_text_1"
             skin:skinAble="true"

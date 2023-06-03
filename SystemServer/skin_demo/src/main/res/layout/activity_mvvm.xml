@@ -22,6 +22,7 @@
             android:textColor="@color/color_text_1"
             android:gravity="center"
             skin:skinAble="true"
+            android:fontFamily="@font/montserrat_italic"
             android:layout_marginTop="30dp"
             tools:ignore="HardcodedText" />
 

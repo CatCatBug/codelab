@@ -50,6 +50,11 @@ open class SkinActivity : AppCompatActivity(), ISkinUpdate {
         mSkinInflaterFactory?.applySkin()
     }
 
+    override fun onTextFontUpdate(replaceTable:Map<String,String>) {
+        if (!isResponseOnSkinChanging) return
+        mSkinInflaterFactory?.applyTextFont(replaceTable)
+    }
+
     fun dynamicAddView(view: View, pDAttrs: List<DynamicAttr>) {
         mSkinInflaterFactory?.dynamicAddSkinEnableView(this, view, pDAttrs)
     }

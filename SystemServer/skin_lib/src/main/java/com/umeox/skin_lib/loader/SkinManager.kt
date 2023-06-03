@@ -7,8 +7,8 @@ import android.content.res.AssetManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -171,6 +171,14 @@ object SkinManager : ISkinLoader {
         }
     }
 
+    fun applyTextFont(replaceTable:Map<String,String>) {
+        Log.d("xcl_debug", "notifySkinUpdate: 通知字体更新 skinObservers = $skinObservers")
+        if (skinObservers == null) return
+        for (observer in skinObservers!!) {
+            observer.onTextFontUpdate(replaceTable)
+        }
+    }
+
     fun getColor(resId: Int): Int {
         val originColor: Int = context!!.resources.getColor(resId, null)
 
@@ -214,7 +222,7 @@ object SkinManager : ISkinLoader {
             val resName =
                 context!!.resources.getResourceEntryName(resId) + SkinConfig.getSkinSuffix()
 
-            val trueResId = context!!.resources.getIdentifier(resName, "drawable", skinPackageName)
+            val trueResId = context!!.resources.getIdentifier(resName, "drawable", context!!.packageName)
 
             val trueDrawable: Drawable? = try {
                 ResourcesCompat.getDrawable(context!!.resources, trueResId, null)
@@ -249,6 +257,11 @@ object SkinManager : ISkinLoader {
             )
             return trueDrawable
         }
+    }
+
+    fun getFont(name: String): Typeface? {
+        val trueResId = context!!.resources.getIdentifier(name, "font", context!!.packageName)
+        return ResourcesCompat.getFont(context!!, trueResId)
     }
 
     fun convertToColorStateList(resId: Int): ColorStateList? {

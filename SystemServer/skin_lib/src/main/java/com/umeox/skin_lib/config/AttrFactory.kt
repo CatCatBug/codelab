@@ -1,5 +1,6 @@
 package com.umeox.skin_lib.config
 
+import android.graphics.fonts.FontFamily
 import com.umeox.skin_lib.entity.*
 
 object AttrFactory {
@@ -8,6 +9,7 @@ object AttrFactory {
     const val TEXT_COLOR = "textColor"
     const val LIST_SELECTOR = "listSelector"
     const val DIVIDER = "divider"
+    const val FONT_FAMILY = "fontFamily"
 
     /**
      * Check whether the attribute is supported
@@ -23,6 +25,9 @@ object AttrFactory {
             return true
         }
         if (LIST_SELECTOR == attrName) {
+            return true
+        }
+        if (FONT_FAMILY == attrName) {
             return true
         }
         return DIVIDER == attrName
@@ -42,6 +47,8 @@ object AttrFactory {
             ListSelectorAttr()
         } else if (DIVIDER == attrName) {
             DividerAttr()
+        } else if (FONT_FAMILY == attrName) {
+            TextFontAttr()
         } else {
             return null
         }
