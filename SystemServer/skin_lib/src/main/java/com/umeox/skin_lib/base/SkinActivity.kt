@@ -17,6 +17,9 @@ open class SkinActivity : AppCompatActivity(), ISkinUpdate {
 
     private var itemManager: SkinItemManager? = null
 
+    private var needRefreshSkin = false
+    private var uiVisible = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         itemManager = SkinItemManager()
         layoutInflater.factory = itemManager!!.getInflaterFactory()
@@ -26,15 +29,22 @@ open class SkinActivity : AppCompatActivity(), ISkinUpdate {
     override fun onResume() {
         super.onResume()
         SkinManager.attach(this)
+        uiVisible = true
+        if (needRefreshSkin) {
+            needRefreshSkin = false
+            itemManager?.applySkin()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        uiVisible = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        itemManager?.destroy()
         SkinManager.detach(this)
-    }
-
-    protected fun dynamicAddSkinEnableView(view: View, attrName: String?, attrValueResId: Int) {
-        itemManager?.dynamicAddSkinEnableView(this, view, attrName, attrValueResId)
     }
 
     protected fun dynamicAddSkinEnableView(view: View, pDAttrs: List<DynamicAttr>) {
@@ -47,10 +57,15 @@ open class SkinActivity : AppCompatActivity(), ISkinUpdate {
 
     override fun onThemeUpdate() {
         if (!isResponseOnSkinChanging) return
-        itemManager?.applySkin()
+
+        needRefreshSkin = true
+        if (uiVisible) {
+            needRefreshSkin = false
+            itemManager?.applySkin()
+        }
     }
 
-    override fun onTextFontUpdate(replaceTable:Map<String,String>) {
+    override fun onTextFontUpdate(replaceTable: Map<String, String>) {
         if (!isResponseOnSkinChanging) return
         itemManager?.applyTextFont(replaceTable)
     }
@@ -58,5 +73,4 @@ open class SkinActivity : AppCompatActivity(), ISkinUpdate {
     fun dynamicAddView(view: View, pDAttrs: List<DynamicAttr>) {
         itemManager?.dynamicAddSkinEnableView(this, view, pDAttrs)
     }
-
 }

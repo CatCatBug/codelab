@@ -1,7 +1,6 @@
 package com.umeox.skin_lib.entity
 
 import android.view.View
-import com.umeox.skin_lib.SkinManager
 
 class SkinItem {
 
@@ -10,19 +9,17 @@ class SkinItem {
     var attrs = mutableListOf<Attr>()
 
     fun apply() {
-        SkinManager.log("SkinItem:apply  view = $view")
         view?.let {
             for (attr in attrs) {
-                SkinManager.log("SkinItem:apply  attr = $attr")
                 attr.apply(it)
             }
         }
     }
 
-    fun applyTextFont(replaceTable:Map<String,String>) {
+    fun applyTextFont(replaceTable: Map<String, String>) {
         view?.let {
             for (attr in attrs) {
-                attr.applyTextFont(it,replaceTable)
+                attr.applyTextFont(it, replaceTable)
             }
         }
     }

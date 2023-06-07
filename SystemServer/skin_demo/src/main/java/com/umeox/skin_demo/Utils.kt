@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.umeox.skin_lib.SkinManager
+import com.umeox.skin_lib.SkinMode
 import java.io.File
 import java.io.FileOutputStream
 
@@ -46,6 +47,11 @@ object Utils {
 //            return
 //        }
 
+        if (SkinManager.getMode() == SkinMode.INNER_SKIN_MODE) {
+            SkinManager.applySkin("_night")
+            return
+        }
+
         val skin = File(context.getExternalFilesDir(null),"t1.skin")
         if (!skin.exists()) {
             Log.e("xcl_debug", "文件不存在，尝试复制皮肤文件---")
@@ -62,5 +68,7 @@ object Utils {
         }
         SkinManager.applySkin(skin.path)
     }
+
+
 
 }

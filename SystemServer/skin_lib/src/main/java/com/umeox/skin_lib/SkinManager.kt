@@ -26,24 +26,49 @@ object SkinManager : ISkinLoader {
         loadResource(mode)
     }
 
+    fun isDefaultSkin(): Boolean {
+        val curSkin = if (mode == SkinMode.EXTERN_SKIN_MODE) {
+            getCustomSkinPath()
+        } else {
+            getSkinSuffix()
+        }
+        return curSkin == DEFAULT_SKIN
+    }
+
+    fun getCurSkin(): String {
+        return if (mode == SkinMode.EXTERN_SKIN_MODE) {
+            getCustomSkinPath()
+        } else {
+            getSkinSuffix()
+        }
+    }
+
     fun restoreDefaultTheme() {
-        saveCustomSkinPath(DEFAULT_SKIN)
+        if (mode == SkinMode.EXTERN_SKIN_MODE) {
+            saveCustomSkinPath(DEFAULT_SKIN)
+        } else {
+            saveSkinSuffix(DEFAULT_SKIN)
+        }
         ResourceManager.restoreDefaultTheme()
         notifySkinUpdate()
     }
 
     fun applyTextFont(replaceTable: Map<String, String>) {
-        log("notifySkinUpdate: 通知字体更新 skinObservers = $skinObservers")
+        log("notifySkinUpdate: 通知字体更新")
         for (observer in skinObservers) {
             observer.onTextFontUpdate(replaceTable)
         }
     }
 
     fun applySkin(path: String) {
-        if (path != DEFAULT_SKIN) {
+        log("notifySkinUpdate: 通知皮肤更新")
+
+        if (path != DEFAULT_SKIN && path != getCurSkin()) {
             ResourceManager.loadResource(path, mode)
         }
     }
+
+    fun getMode() = mode
 
     private fun loadResource(mode: SkinMode) {
         val path = if (mode == SkinMode.EXTERN_SKIN_MODE) {
@@ -58,7 +83,9 @@ object SkinManager : ISkinLoader {
     }
 
     internal fun log(msg: String) {
-        Log.d("SuperSkinManager", msg)
+        if (BuildConfig.DEBUG) {
+            Log.d("SuperSkinManager", msg)
+        }
     }
 
     private fun getSkinSuffix(): String {
@@ -69,7 +96,6 @@ object SkinManager : ISkinLoader {
     private fun saveSkinSuffix(suffix: String) {
         SKIN_SUFFIX.saveSpStringValue(suffix)
     }
-
 
     private fun getCustomSkinPath(): String {
         return PREF_CUSTOM_SKIN_PATH.getSpStringValue(DEFAULT_SKIN)
@@ -92,7 +118,6 @@ object SkinManager : ISkinLoader {
     }
 
     override fun notifySkinUpdate() {
-        log("notifySkinUpdate: 通知皮肤更新 skinObservers = $skinObservers")
         for (observer in skinObservers) {
             observer.onThemeUpdate()
         }

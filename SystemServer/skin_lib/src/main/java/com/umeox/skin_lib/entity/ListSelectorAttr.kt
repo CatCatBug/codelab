@@ -9,12 +9,12 @@ class ListSelectorAttr : Attr() {
     override fun apply(view: View) {
         if (view is AbsListView) {
             if ("color" == attrValueTypeName) {
-                SkinManager.log("apply ListSelector Color")
+                SkinManager.log("DividerAttr apply ListSelector color - attrName = $attrName   attrValueRefName = $attrValueRefName")
                 view.setSelector(getColor())
             }
 
             if ("drawable" == attrValueTypeName) {
-                SkinManager.log("apply ListSelector Drawable")
+                SkinManager.log("DividerAttr apply ListSelector drawable - attrName = $attrName   attrValueRefName = $attrValueRefName")
                 view.selector = getDrawable()
             }
         }

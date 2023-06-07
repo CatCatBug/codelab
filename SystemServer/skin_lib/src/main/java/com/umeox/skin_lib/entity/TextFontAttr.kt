@@ -10,7 +10,7 @@ class TextFontAttr : Attr() {
 
     override fun applyTextFont(view: View, replaceTable: Map<String, String>) {
         if ("font" == attrValueTypeName) {
-            SkinManager.log("apply fontFamily")
+            SkinManager.log("TextFontAttr apply fontFamily - attrName = $attrName   attrValueRefName = $attrValueRefName")
             if (view is TextView) {
                 view.typeface = getTextFont()
             }

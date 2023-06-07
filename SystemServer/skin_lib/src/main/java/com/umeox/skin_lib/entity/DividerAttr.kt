@@ -11,14 +11,14 @@ class DividerAttr : Attr() {
     override fun apply(view: View) {
         if (view is ListView) {
             if ("color" == attrValueTypeName) {
-                SkinManager.log("apply Divider Color")
+                SkinManager.log("DividerAttr apply divider color - attrName = $attrName   attrValueRefName = $attrValueRefName")
                 val sage = ColorDrawable(getColor())
                 view.divider = sage
                 view.dividerHeight = dividerHeight
             }
 
             if ("drawable" == attrValueTypeName) {
-                SkinManager.log("apply Divider Drawable")
+                SkinManager.log("DividerAttr apply divider drawable - attrName = $attrName   attrValueRefName = $attrValueRefName")
                 view.divider = getDrawable()
             }
         }

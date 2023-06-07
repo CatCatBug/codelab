@@ -8,7 +8,7 @@
     <color name="color_app_bg">#ffffff</color>
     <color name="color_text_1">#000000</color>
 
-    <color name="color_item_bg_1_night">#FF0000</color>
-    <color name="color_app_bg_night">#FF0000</color>
-    <color name="color_text_1_night">#FF0000</color>
+    <color name="color_item_bg_1_night">#127AD5</color>
+    <color name="color_app_bg_night">#271515</color>
+    <color name="color_text_1_night">#7BEFD4</color>
 </resources>

@@ -1,7 +1,5 @@
 package com.umeox.skin_lib.entity
 
-import com.umeox.skin_lib.SkinManager
-
 object AttrFactory {
 
     private fun getAttrByName(name: String): Attr? {
@@ -32,7 +30,6 @@ object AttrFactory {
         attrValueRefName: String,
         typeName: String
     ): Attr? {
-        SkinManager.log("attrName = $attrName attrValueRefId = $attrValueRefId attrValueRefName = $attrValueRefName typeName = $typeName")
         val mSkinAttr = getAttrByName(attrName) ?: return null
         mSkinAttr.attrName = attrName
         mSkinAttr.attrValueRefId = attrValueRefId

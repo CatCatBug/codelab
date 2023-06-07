@@ -16,33 +16,33 @@ class InnerResourceLoader : ResourceLoader() {
 
     override fun getColor(resName: String): Int? {
         val resId = mResources!!.getIdentifier(
-            resName, "color",
+            resName + suffix, "color",
             skinPackageName
         )
         return try {
             mResources.getColor(resId, null)
         } catch (e: Exception) {
-            e.printStackTrace()
+            SkinManager.log("getColor error!! error info: ${e.message}")
             null
         }
     }
 
     override fun getDrawable(resName: String): Drawable? {
         val resId = mResources.getIdentifier(
-            resName, "drawable",
+            resName + suffix, "drawable",
             skinPackageName
         )
         return try {
             ResourcesCompat.getDrawable(mResources, resId, null)
         } catch (e: Resources.NotFoundException) {
-            e.printStackTrace()
+            SkinManager.log("getDrawable error!! error info: ${e.message}")
             null
         }
     }
 
     override fun getColorStateList(resName: String): ColorStateList? {
         val resId = mResources.getIdentifier(
-            resName, "color",
+            resName + suffix, "color",
             skinPackageName
         )
         return try {
@@ -52,7 +52,7 @@ class InnerResourceLoader : ResourceLoader() {
                 null
             )
         } catch (e: Resources.NotFoundException) {
-            e.printStackTrace()
+            SkinManager.log("getColorStateList error!! error info: ${e.message}")
             null
         }
     }
@@ -62,7 +62,7 @@ class InnerResourceLoader : ResourceLoader() {
         return try {
             ResourcesCompat.getFont(SkinManager.app, trueResId)
         } catch (e: Resources.NotFoundException) {
-            e.printStackTrace()
+            SkinManager.log("getFont error!! error info: ${e.message}")
             null
         }
     }
@@ -72,5 +72,4 @@ class InnerResourceLoader : ResourceLoader() {
         suffix = skinPackagePath
         callback?.onSuccess()
     }
-
 }

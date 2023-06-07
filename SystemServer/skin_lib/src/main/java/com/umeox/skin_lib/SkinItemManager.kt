@@ -23,34 +23,21 @@ class SkinItemManager {
     }
 
     fun applySkin() {
-        SkinManager.log("applySkin: 应用皮肤 mSkinItems.size = ${mSkinItems.size}")
         for (item in mSkinItems) {
             item.apply()
         }
     }
 
-    fun applyTextFont(replaceTable:Map<String,String>) {
-        SkinManager.log("applySkin: 应用字体 mSkinItems.size = ${mSkinItems.size}")
+    fun applyTextFont(replaceTable: Map<String, String>) {
         for (item in mSkinItems) {
             item.applyTextFont(replaceTable)
         }
     }
 
-    fun dynamicAddSkinEnableView(
-        context: Context,
-        view: View,
-        attrName: String?,
-        attrValueResId: Int
-    ) {
-        val entryName = context.resources.getResourceEntryName(attrValueResId)
-        val typeName = context.resources.getResourceTypeName(attrValueResId)
-        val skinAttr = AttrFactory.get(attrName!!, attrValueResId, entryName, typeName)
-        if (skinAttr == null) {
-            SkinManager.log("dynamicAddSkinEnableView: mSkinAttr = null ")
-            return
+    fun destroy() {
+        for (item in mSkinItems) {
+            item.clean()
         }
-        dynamicAddSkinEnableView(context, view, arrayListOf(DynamicAttr(attrName, attrValueResId)))
-
     }
 
     fun dynamicAddSkinEnableView(context: Context, view: View, pDAttrs: List<DynamicAttr>) {
@@ -74,6 +61,7 @@ class SkinItemManager {
             val skinItem = SkinItem()
             skinItem.view = view
             skinItem.attrs = viewAttrs
+            skinItem.apply()
             mSkinItems.add(skinItem)
         }
     }
@@ -118,8 +106,10 @@ class SkinItemManager {
                 SkinManager.log("dynamicAddSkinEnableView: mSkinAttr = null ")
             }
         }
-        skinItem.attrs = viewAttrs
-        mSkinItems.add(skinItem)
+        if (viewAttrs.isNotEmpty()) {
+            skinItem.attrs = viewAttrs
+            mSkinItems.add(skinItem)
+        }
     }
 
 }

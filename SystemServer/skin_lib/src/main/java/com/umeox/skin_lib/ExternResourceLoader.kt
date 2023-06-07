@@ -29,6 +29,9 @@ class ExternResourceLoader : ResourceLoader() {
         SkinCoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     override fun getColor(resName: String): Int? {
+        if (mResources == null) {
+            return null
+        }
         val resId = mResources!!.getIdentifier(
             resName, "color",
             skinPackageName
@@ -42,6 +45,9 @@ class ExternResourceLoader : ResourceLoader() {
     }
 
     override fun getDrawable(resName: String): Drawable? {
+        if (mResources == null) {
+            return null
+        }
         val resId = mResources!!.getIdentifier(
             resName, "drawable",
             skinPackageName
@@ -54,6 +60,9 @@ class ExternResourceLoader : ResourceLoader() {
     }
 
     override fun getColorStateList(resName: String): ColorStateList? {
+        if (mResources == null) {
+            return null
+        }
         val resId = mResources!!.getIdentifier(
             resName, "color",
             skinPackageName
@@ -71,6 +80,9 @@ class ExternResourceLoader : ResourceLoader() {
     }
 
     override fun getFont(resName: String): Typeface? {
+        if (mResources == null) {
+            return null
+        }
         val trueResId = mResources!!.getIdentifier(resName, "font", skinPackageName)
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

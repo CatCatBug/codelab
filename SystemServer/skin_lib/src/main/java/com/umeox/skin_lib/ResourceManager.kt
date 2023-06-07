@@ -16,26 +16,22 @@ object ResourceManager : ILoaderListener {
 
     fun getColor(resId: Int): Int {
         val resName: String = originResource.getResourceEntryName(resId)
-        SkinManager.log("getColor resName = $resName")
         return resourceLoader?.getColor(resName) ?: originResource.getColor(resId, null)
     }
 
     fun getDrawable(resId: Int): Drawable? {
         val resName: String = originResource.getResourceEntryName(resId)
-        SkinManager.log("getDrawable resName = $resName")
         return resourceLoader?.getDrawable(resName)
             ?: ContextCompat.getDrawable(SkinManager.app, resId)
     }
 
     fun getColorStateList(resId: Int): ColorStateList? {
         val resName: String = originResource.getResourceEntryName(resId)
-        SkinManager.log("getColorStateList resName = $resName")
         return resourceLoader?.getColorStateList(resName)
             ?: ContextCompat.getColorStateList(SkinManager.app, resId)
     }
 
     fun getFont(name: String): Typeface? {
-        SkinManager.log("getFont name = $name")
         return resourceLoader?.getFont(name)
     }
 

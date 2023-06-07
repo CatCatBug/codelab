@@ -38,7 +38,7 @@ class SuperSkinInflaterFactory(private val itemManager: SkinItemManager) : Layou
     }
 
     private fun createViewInner(context: Context, name: String, attrs: AttributeSet): View? {
-        SkinManager.log("createViewInner name =  $name")
+        SkinManager.log("createViewInner name =  $name    ------------------------------------------------------")
         var view: View? = null
         try {
             if (-1 == name.indexOf('.')) {
@@ -58,7 +58,6 @@ class SuperSkinInflaterFactory(private val itemManager: SkinItemManager) : Layou
             SkinManager.log("error while create 【" + name + "】 : " + e.message)
             view = null
         }
-        SkinManager.log("create result: view = $view")
         return view
     }
 }

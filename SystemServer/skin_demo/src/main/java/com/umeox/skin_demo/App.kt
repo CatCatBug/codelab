@@ -8,7 +8,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        SkinManager.init(this, SkinMode.EXTERN_SKIN_MODE)
+        SkinManager.init(this, SkinMode.INNER_SKIN_MODE)
     }
 
 }

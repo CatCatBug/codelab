@@ -19,6 +19,7 @@ class NativeActivity : SkinActivity() {
         setContentView(R.layout.activity_native)
 
 
+
         findViewById<SwitchCompat>(R.id.sc_theme).setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 Utils.applyNight(this)
@@ -30,6 +31,11 @@ class NativeActivity : SkinActivity() {
         findViewById<TextView>(R.id.tv_add).setOnClickListener {
             dynamicAddTitleView()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        findViewById<SwitchCompat>(R.id.sc_theme).isChecked = !SkinManager.isDefaultSkin()
     }
 
     @SuppressLint("SetTextI18n")
