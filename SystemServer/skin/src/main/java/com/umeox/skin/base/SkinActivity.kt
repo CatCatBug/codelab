@@ -1,12 +1,12 @@
-package com.umeox.skin_lib.base
+package com.umeox.skin.base
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.umeox.skin_lib.SkinItemManager
-import com.umeox.skin_lib.SkinManager
-import com.umeox.skin_lib.entity.DynamicAttr
-import com.umeox.skin_lib.listener.ISkinUpdate
+import com.umeox.skin.SkinItemManager
+import com.umeox.skin.SkinManager
+import com.umeox.skin.entity.DynamicAttr
+import com.umeox.skin.listener.ISkinUpdate
 
 open class SkinActivity : AppCompatActivity(), ISkinUpdate {
 

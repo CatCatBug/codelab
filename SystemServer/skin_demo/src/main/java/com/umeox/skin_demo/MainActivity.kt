@@ -4,9 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import com.umeox.skin_lib.SkinManager
 import com.umeox.skin_lib.base.SkinActivity
-import com.umeox.skin_lib.config.SkinConfig
-import com.umeox.skin_lib.loader.SkinManager
 
 class MainActivity : SkinActivity() {
 
@@ -14,9 +13,6 @@ class MainActivity : SkinActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (!SkinConfig.isDefaultSkin()) {
-            findViewById<SwitchCompat>(R.id.sc_theme).isChecked = true
-        }
 
         findViewById<SwitchCompat>(R.id.sc_theme).setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

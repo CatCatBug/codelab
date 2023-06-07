@@ -3,9 +3,7 @@ package com.umeox.skin_demo
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import com.umeox.skin_lib.config.SkinConfig
-import com.umeox.skin_lib.listener.ILoaderListener
-import com.umeox.skin_lib.loader.SkinManager
+import com.umeox.skin_lib.SkinManager
 import java.io.File
 import java.io.FileOutputStream
 
@@ -30,28 +28,28 @@ object Utils {
 
     fun applyNight(context: Context) {
 //        val skin = File(getExternalFilesDir(null),"BlackFantacy.skin")
-        if (!SkinConfig.useSkinPackage) {
-            SkinManager.load("night",
-                object : ILoaderListener {
-                    override fun onStart() {
-                        Log.e("xcl_debug", "startloadSkin")
-                    }
-
-                    override fun onSuccess() {
-                        Log.e("xcl_debug", "loadSkinSuccess")
-                    }
-
-                    override fun onFailed() {
-                        Log.e("xcl_debug", "loadSkinFail")
-                    }
-                })
-            return
-        }
+//        if (!SkinConfig.useSkinPackage) {
+//            SkinManager.load("night",
+//                object : ILoaderListener {
+//                    override fun onStart() {
+//                        Log.e("xcl_debug", "startloadSkin")
+//                    }
+//
+//                    override fun onSuccess() {
+//                        Log.e("xcl_debug", "loadSkinSuccess")
+//                    }
+//
+//                    override fun onFailed() {
+//                        Log.e("xcl_debug", "loadSkinFail")
+//                    }
+//                })
+//            return
+//        }
 
         val skin = File(context.getExternalFilesDir(null),"t1.skin")
         if (!skin.exists()) {
             Log.e("xcl_debug", "文件不存在，尝试复制皮肤文件---")
-            Utils.copyFile(context,R.raw.t1,skin)
+            copyFile(context,R.raw.t1,skin)
             if (!skin.exists()) {
                 Toast.makeText(
                     context,
@@ -62,20 +60,7 @@ object Utils {
             }
             Log.e("xcl_debug", "复制皮肤文件成功---")
         }
-        SkinManager.load(skin.absolutePath,
-            object : ILoaderListener {
-                override fun onStart() {
-                    Log.e("xcl_debug", "startloadSkin")
-                }
-
-                override fun onSuccess() {
-                    Log.e("xcl_debug", "loadSkinSuccess")
-                }
-
-                override fun onFailed() {
-                    Log.e("xcl_debug", "loadSkinFail")
-                }
-            })
+        SkinManager.applySkin(skin.path)
     }
 
 }

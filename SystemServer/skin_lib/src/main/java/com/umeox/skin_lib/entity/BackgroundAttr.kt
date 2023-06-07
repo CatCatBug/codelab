@@ -3,18 +3,23 @@ package com.umeox.skin_lib.entity
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import com.umeox.skin_lib.loader.SkinManager
+import com.umeox.skin_lib.SkinManager
 
-class BackgroundAttr : SkinAttr() {
+class BackgroundAttr : Attr() {
 
     override fun apply(view: View) {
-        if (RES_TYPE_NAME_COLOR == attrValueTypeName) {
-            Log.i("xcl_debug", "apply background color     attrValueRefId = $attrValueRefId")
-            view.setBackgroundColor(SkinManager.getColor(attrValueRefId))
-        } else if (RES_TYPE_NAME_DRAWABLE == attrValueTypeName) {
-            Log.i("xcl_debug", "apply background drawable     attrValueRefId = $attrValueRefId")
-            val bg: Drawable? = SkinManager.getDrawable(attrValueRefId)
+        SkinManager.log("view = $view  attrValueTypeName = $attrValueTypeName")
+        if ("color" == attrValueTypeName) {
+            SkinManager.log("apply background color     attrValueRefId = $attrValueRefId")
+            view.setBackgroundColor(getColor())
+            return
+        }
+
+        if ("drawable" == attrValueTypeName) {
+            SkinManager.log("apply background drawable     attrValueRefId = $attrValueRefId")
+            val bg: Drawable? = getDrawable()
             view.background = bg
+            return
         }
     }
 

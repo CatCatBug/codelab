@@ -1,14 +1,14 @@
 package com.umeox.skin_demo
 
 import android.app.Application
-import com.umeox.skin_lib.loader.SkinManager
+import com.umeox.skin_lib.SkinManager
+import com.umeox.skin_lib.SkinMode
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        SkinManager.init(this)
-        SkinManager.load()
+        SkinManager.init(this, SkinMode.EXTERN_SKIN_MODE)
     }
 
 }

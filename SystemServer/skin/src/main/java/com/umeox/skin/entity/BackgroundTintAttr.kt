@@ -1,12 +1,11 @@
-package com.umeox.skin_lib.entity
+package com.umeox.skin.entity
 
 import android.view.View
-import com.umeox.skin_lib.SkinManager
 
 class BackgroundTintAttr : Attr() {
 
     override fun apply(view: View) {
-        SkinManager.log("apply backgroundTintList")
+        com.umeox.skin.SkinManager.log("apply backgroundTintList")
         view.backgroundTintList = getColorStateList()
     }
 

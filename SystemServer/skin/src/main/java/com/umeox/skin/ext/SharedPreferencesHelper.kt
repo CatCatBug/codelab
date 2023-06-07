@@ -1,8 +1,8 @@
-package com.umeox.skin_lib.ext
+package com.umeox.skin.ext
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.umeox.skin_lib.SkinManager
+import com.umeox.skin.SkinManager
 
 /**
  * SharedPreferences帮助类

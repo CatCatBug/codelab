@@ -1,8 +1,7 @@
-package com.umeox.skin_lib.entity
+package com.umeox.skin.entity
 
 import android.view.View
 import android.widget.TextView
-import com.umeox.skin_lib.SkinManager
 
 class TextFontAttr : Attr() {
 
@@ -10,7 +9,7 @@ class TextFontAttr : Attr() {
 
     override fun applyTextFont(view: View, replaceTable: Map<String, String>) {
         if ("font" == attrValueTypeName) {
-            SkinManager.log("apply fontFamily")
+            com.umeox.skin.SkinManager.log("apply fontFamily")
             if (view is TextView) {
                 view.typeface = getTextFont()
             }

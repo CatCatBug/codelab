@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import com.umeox.skin_lib.ResourceManager
+import com.umeox.skin_lib.SkinManager
 import com.umeox.skin_lib.base.SkinActivity
-import com.umeox.skin_lib.config.AttrFactory
-import com.umeox.skin_lib.config.SkinConfig
 import com.umeox.skin_lib.entity.DynamicAttr
-import com.umeox.skin_lib.loader.SkinManager
 
 class NativeActivity : SkinActivity() {
 
@@ -19,9 +18,6 @@ class NativeActivity : SkinActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_native)
 
-        if (!SkinConfig.isDefaultSkin()) {
-            findViewById<SwitchCompat>(R.id.sc_theme).isChecked = true
-        }
 
         findViewById<SwitchCompat>(R.id.sc_theme).setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -47,12 +43,12 @@ class NativeActivity : SkinActivity() {
         textView.layoutParams = param
         textView.gravity = Gravity.CENTER
         textView.setPadding(0,20,0,20)
-        textView.setTextColor(SkinManager.getColor(R.color.color_text_1))
+        textView.setTextColor(ResourceManager.getColor(R.color.color_text_1))
         textView.textSize = 20f
 
         findViewById<LinearLayout>(R.id.ll).addView(textView)
         val mDynamicAttr: MutableList<DynamicAttr> = mutableListOf()
-        mDynamicAttr.add(DynamicAttr(AttrFactory.TEXT_COLOR, R.color.color_text_1))
+        mDynamicAttr.add(DynamicAttr("textColor", R.color.color_text_1))
         dynamicAddView(textView, mDynamicAttr)
     }
 
