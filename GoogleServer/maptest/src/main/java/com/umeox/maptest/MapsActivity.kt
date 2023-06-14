@@ -19,6 +19,12 @@ private lateinit var binding: ActivityMapsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        supportFragmentManager.addFragmentOnAttachListener { fragmentManager, fragment ->
+
+            Log.d("xcl_debug", "onCreate: $fragment  isDetached =  ${fragment.isDetached}")
+        }
+
+
      binding = ActivityMapsBinding.inflate(layoutInflater)
      setContentView(binding.root)
 
