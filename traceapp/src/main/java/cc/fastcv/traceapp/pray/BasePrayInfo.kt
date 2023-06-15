@@ -1,5 +1,7 @@
 package cc.fastcv.traceapp.pray
 
+import android.content.Context
+import android.text.format.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,7 +41,7 @@ data class BasePrayInfo(
             return list
         }
 
-        fun getPrayerType(index: Int): PrayerType {
+        private fun getPrayerType(index: Int): PrayerType {
             return when (index) {
                 0 -> PrayerType.FAJR
                 1 -> PrayerType.SUNRISE
@@ -52,6 +54,36 @@ data class BasePrayInfo(
             }
         }
     }
+
+    //可提供给子类使用
+//    fun getTimeStr(context: Context): String {
+//        if (timeStamp < 0L) {
+//            return "----"
+//        }
+//        return if (DateFormat.is24HourFormat(context)) {
+//            SimpleDateFormat(
+//                "HH:mm",
+//                Locale.ENGLISH
+//            ).format(Date(timeStamp))
+//        } else {
+//            SimpleDateFormat(
+//                "hh:mm",
+//                Locale.ENGLISH
+//            ).format(Date(timeStamp)) +
+//                    if (isAM(timeStamp)) {
+//                        R.string.front_page_am.string
+//                    } else {
+//                        R.string.front_page_pm.string
+//                    }
+//        }
+//    }
+//
+//    private fun isAM(time: Long): Boolean {
+//        val calendar = Calendar.getInstance()
+//        calendar.timeInMillis = time
+//        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+//        return hour < 12
+//    }
 
     override fun toString(): String {
         return "BasePrayInfo(prayType = $prayType  timeStamp = $timeStamp   datetime = ${
