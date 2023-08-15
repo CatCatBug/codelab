@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">i18n</string>
-    <string name="language_icon">語言圖標</string>
-    <string name="i_love_you">我愛你</string>
-    <string name="i18n_setting">多語言設置</string>
-    <string name="is_checked">是否選中</string>
-</resources>

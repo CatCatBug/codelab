@@ -89,5 +89,10 @@
         android:id="@+id/bt_t4_log"
         tools:ignore="HardcodedText" />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/i1" />
+
 
 </LinearLayout>

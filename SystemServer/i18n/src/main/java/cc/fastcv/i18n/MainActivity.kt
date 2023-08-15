@@ -1,6 +1,7 @@
 package cc.fastcv.i18n
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -27,4 +28,5 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+
 }
