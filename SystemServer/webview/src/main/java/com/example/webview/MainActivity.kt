@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val url = "http://192.168.3.109:8080/index.html"
+    private val url = "https://myshop.maxcares.com/test.html"
 
     private lateinit var webView:WebView
 
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 //使用WebView加载显示url
                 view.loadUrl(url)
+                Log.d("webview", "url = $url");
                 //返回true
                 return true
             }
@@ -67,6 +70,14 @@ class MainActivity : AppCompatActivity() {
 
         //访问网页
         webView.loadUrl(url)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            webView.goBack()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onDestroy() {

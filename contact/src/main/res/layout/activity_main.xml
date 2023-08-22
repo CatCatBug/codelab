@@ -12,7 +12,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_height="match_parent" />
 
-    <cc.fastcv.contact.WaveSideBar
+    <com.example.lib.WaveSideBar
         android:id="@+id/side_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -6,8 +6,8 @@ import android.webkit.JavascriptInterface
 
 class MyJSI(private val context: Context) {
     @JavascriptInterface
-    fun invokeFun(funName:String,json:String?) {
-        Log.d("MyJSI", "invokeFun: funName = $funName  json = $json ")
+    fun invokeFun(any: String) {
+        Log.d("MyJSI", "invokeFun: any = $any ")
     }
 
     //通用
