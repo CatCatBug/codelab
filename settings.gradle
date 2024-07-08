@@ -1,7 +1,6 @@
 rootProject.name = "codelab"
 
 //SystemServer
-include 'SystemServer:filemanager'
 //include 'SystemServer:sqlite'
 include 'SystemServer:notification'
 include 'SystemServer:i18n'
